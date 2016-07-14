@@ -1,1 +1,1 @@
-web: gunicorn AnIndianStory.wsgi
+web: gunicorn internship.wsgi

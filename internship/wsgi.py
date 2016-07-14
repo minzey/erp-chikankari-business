@@ -16,12 +16,12 @@ https://docs.djangoproject.com/en/1.9/howto/deployment/wsgi/
 #application = get_wsgi_application()
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "internship.settings")
-
 from django.core.wsgi import get_wsgi_application
 from whitenoise.django import DjangoWhiteNoise
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "internship.settings")
 application = get_wsgi_application()
+
 try:
     application = DjangoWhiteNoise(application)
 except:
