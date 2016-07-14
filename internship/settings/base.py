@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'AnIndianStory',
     'bootstrapform',
+    ' psycopg2',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -85,6 +86,8 @@ DATABASES = {
         'PASSWORD': 'swati2104',
         'HOST': 'localhost',
         'PORT': '3306',
+
+
     }
 }
 
