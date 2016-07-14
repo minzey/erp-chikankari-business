@@ -1,0 +1,82 @@
+{% extends "form_layout.html" %}
+{% load static from staticfiles %}
+
+{% block title %}
+<title>All Karigars</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" style="width: 70%; margin: auto; margin-bottom: 10px;">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Success! </strong>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="width: 70%; margin: auto; border: solid darkgray 0.5px; border-radius: 5px; padding: 10px">
+
+        <div class="col-sm-5 col-sm-offset-7" style="margin-bottom: 10px;">
+            <div class="form-group">
+
+                <div class="input-group" style="width: 70%; float: left">
+                    <input type="text" class="form-control"
+                           placeholder="Search Karigar" id="searchInput"/>
+                    <span class="input-group-addon">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </span>                    
+                </div>
+                <div class="input-group-btn" style="width: 30%; float: right;">
+                    <a href="{% url 'new_karigar' %}" class="btn btn-primary pull-right" role="button">Add Karigar</a>
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;">
+            <p><hr/></p>
+        </div>
+
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Profile</th>
+                    <th>Address</th>
+                    <th>Contact</th>
+                    <th>PAN number</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody id="klist">
+                {% for karigar in karigars %}
+
+                <tr>
+                    {% if karigar.photo != '/media/'%}
+                        <td><a href="{{ karigar.photo }}"><img src="{{ karigar.photo }}"  class="img-circle" width="70" height="70"></a></td>
+                    {% else %}
+                        <td><img src="/media/default_image.png"  class="img-circle" width="70" height="70"></td>
+                    {% endif %}
+                    <td>
+                        <a href="{% url 'new_product_assign' name_pk=karigar.pk %}">{{ karigar.name }}</a>
+                    </td>
+                    <td>{{ karigar.profile }}</td>
+                    <td>{{ karigar.address }}</td>
+                    <td>{{ karigar.phone }}</td>
+                    <td>{{ karigar.pan }}</td>
+                    <td><a href="{% url 'edit_karigar' name_pk=karigar.pk %}"><span class="glyphicon glyphicon-edit"></span></a></td>
+                    <td><a href="{% url 'delete_karigar' name_pk=karigar.pk %}" onclick="return confirm('Are you sure you want to delete all records of {{ karigar.name }}?')"><span class="glyphicon glyphicon-trash"></span></td>
+                </tr>
+                {% endfor %}
+
+              </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,82 @@
+{% extends "form_layout.html" %}
+{% block title %}
+<title>All products</title>
+{% endblock %}
+
+{% block content %}
+    <div class="row bottom-buffer" style="width: 97%; margin: auto;">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" style="width: 70%; margin: auto; margin-bottom: 10px;">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success! </strong>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <a href="{% url 'new_product' %}" class="btn btn-primary pull-right" role="button">Add Product</a>
+
+    </div>
+<div class="row" style="width: 97%; margin: auto;">
+
+    <hr>
+    {% for product in products %}
+    <div class="col-sm-3 col-md-3">
+
+        <div class="thumbnail">
+            {% if product.photo != '/media/' %}
+            <a href="{{ product.photo }}"><img src="{{ product.photo }}" style="width: 100%; height: 200px; object-fit: cover; border: solid darkgray 1px;" ></a>
+            {% else %}
+            <img src="/media/default_image.png" style="width: 100%; height: 200px; object-fit: cover; border: solid darkgray 1px;" >
+            {% endif %}
+            <div class="caption">
+                <h4>{{ product.prodid }}
+                    <a style="margin-left:2px;" href="{% url 'delete_product' id_pk=product.pk %}"
+                onclick="return confirm('Are you sure you want to delete all records of {{ product.prodid }}?')">
+                        <span class="glyphicon glyphicon-trash pull-right"></span></a>
+
+                    <a href="{% url 'edit_product' id_pk=product.pk %}"><span style="margin-right: 10px;" class="glyphicon glyphicon-edit pull-right"></span></a>
+
+                </h4>
+
+                <div style="float: left; width: 20%; line-height: 30%;">
+                    <p><strong>Fabric</strong></p>
+                    <p>{{ product.fabric }}</p>
+                    <p><strong>Colour</strong></p>
+                    <p>{{ product.colour }}</p>
+                </div>
+                {% if request.user.is_superuser %}
+                    <div style="float: right; width: 80%; line-height: 40%;">
+                        <p><strong>Cost</strong></p>
+                        <table style="line-height: normal">
+                            <thead>
+                                <tr>
+                                    <th>Stitch|</th>
+                                    <th>Block|</th>
+                                    <th>Emb|</th>
+                                    <th>Wash|</th>
+                                    <th>Addon</th>
+                                </tr>
+                            </thead>
+                            <tbody style="text-align: center;">
+                                <tr>
+                                    <td>{{ product.cost_stitch }}</td>
+                                    <td>{{ product.cost_block }}</td>
+                                    <td>{{ product.cost_emb }}</td>
+                                    <td>{{ product.cost_wash }}</td>
+                                    <td>{{ product.cost_addon }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                {% endif %}
+                <div style="clear: both;">
+
+            </div>
+
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

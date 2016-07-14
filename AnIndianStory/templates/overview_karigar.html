@@ -1,0 +1,100 @@
+{% extends "form_layout.html" %}
+{% block title %}
+    <title>Overview-Karigar</title>
+{% endblock %}
+
+{% block content %}
+    <div class="col-sm-12" style="margin: 10px;">
+
+        <form action=""method="post" name="overview_karigar_form">
+             {% csrf_token %}
+            <select class="chosen-select" id="id_klist" name="select_karigar">
+                    {% for karigar in klist %}
+                        <option>{{ karigar.name }}</option>
+                    {% endfor %}
+            </select>
+        </form>
+
+
+    </div>
+
+    <div class = "row" style="margin:5px;">
+        <div class="col-sm-6" style="width: 38%; height: 100%; float:left;">
+            <h4><label class="label label-default">OVERVIEW</label></h4>
+                    <table id="table_all_products" class="table table-striped table-bordered table-hover
+                    dataTable no-footer" width="100%" style="margin-top: 10px;overflow: hidden; line-height: 50%">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Issued</th>
+                                <th>Received</th>
+                                <th>Pending</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all_products">
+
+                        </tbody>
+                    </table>
+
+        </div>
+        <div style="width: 60%; float:right; border-left: solid 0.5px darkgray;">
+            <div style="height: 66%;">
+                <div class="col-sm-3" style=" width: 50%; max-height: 66%;float: left;">
+                    <h5><label class="label label-warning">ISSUE</label></h5>
+
+                    <table id="table_product_issue" width="100%" class="table table-striped table-bordered
+                    table-hover dataTable no-footer" cellspacing="0" cellpadding="0" style="overflow: hidden;">
+                        <thead>
+                            <tr>
+                                <th>Challan ID</th>
+                                <th>Date</th>
+                                <th>Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products_issue">
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-sm-3" style="width: 50%; max-height: 66%;float:right;">
+                    <h5><label class="label label-danger">RECEIVE</label></h5>
+
+                    <table id="table_product_receive" width="100%" class="table table-striped table-bordered
+                    table-hover dataTable no-footer" cellspacing="1" cellpadding="1" style="overflow: hidden">
+                        <thead>
+                            <tr>
+                                <th>Challan ID</th>
+                                <th>Date</th>
+                                <th>Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products_receive">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="max-height: 33%; width: 100%; clear: both;">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <h5><label class="label label-success" style="width: 100%">REISSUE</label></h5>
+                    <table id="table_product_reissue" width="100%" class="table table-striped table-bordered
+                    table-hover dataTable no-footer" cellspacing="1" cellpadding="1" style="overflow: hidden;">
+                            <thead>
+                                <tr>
+                                    <th>Challan ID</th>
+                                    <th>Date</th>
+                                    <th>Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products_reissue">
+
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

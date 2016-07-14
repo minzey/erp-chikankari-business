@@ -1,0 +1,89 @@
+{% load bootstrap %}
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- CSS files -->
+
+        <link rel="stylesheet" href="{% static 'css/chosen.css' %}" type="text/css"  />
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css">
+        <link rel="stylesheet" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.2.1/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="{% static 'css/navigationbar.css' %}" type="text/css"  />
+
+
+        {% block custom_css %}
+
+        {% endblock %}
+
+        {% block title %}
+        <title>Base Layout</title>
+        {% endblock %}
+
+        <style type="text/css">
+            .multiple-checkbox ul { /* Used to hide <li> elements in multiple checkbox forms */
+              padding-left: 0px;
+              list-style: none;
+            }
+        </style>
+
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">AnIndianStory</a>
+                </div>
+                <ul class="nav navbar-nav">
+
+                    <li id="karigar"><a href="{% url 'karigars_all' %}">Karigars</a></li>
+                    <li id="product"><a href="{% url 'products_all' %}">Products</a></li>
+                    <li id="report"><a href="{% url 'overview_dates' %}">Time-period Report</a></li>
+                    <li id="overview" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Overview
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="{% url 'overview_karigars' %}">Karigar</a></li>
+                          <li><a href="{% url 'overview_products' %}">Product</a></li>
+                          <li><a href="{% url 'overview_challans' %}">Challan</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+                <p class="pull-right" style="color: white; margin-top: 15px; margin-right: 5px;">
+                    <b>Welcome, {{ user.username }}  |  </b>
+                    <a style="color: white;margin-left: 10px; margin-right: 10px;" href="{% url 'logout' %}">Logout</a>
+                </p>
+            </div>
+        </nav>
+
+    {% block content %}
+
+    {% endblock %}
+
+        <!-- scripts -->
+
+        <script src="http://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+        <script src="//cdn.datatables.net/buttons/1.2.1/js/dataTables.buttons.min.js"></script>
+        <script src="//cdn.datatables.net/buttons/1.2.1/js/buttons.flash.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+        <script src="//cdn.datatables.net/buttons/1.2.1/js/buttons.html5.min.js"></script>
+        <script src="//cdn.datatables.net/buttons/1.2.1/js/buttons.print.min.js"></script>
+        <script src="//www.gstatic.com/charts/loader.js"></script>
+        <script src="{% static 'js/chosen.jquery.js' %}"></script>
+        <script src="{% static 'js/filter_karigar.js' %}"></script>
+
+
+    </body>
+</html>
+
+
+
+

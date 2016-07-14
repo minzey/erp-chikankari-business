@@ -1,0 +1,48 @@
+{% extends "form_layout.html" %}
+{% block title %}
+    <title>Time-period Report</title>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+
+        <form action="" method="post" name="overview_challan_form" style="max-width: 85%; margin: auto;">
+            <div class="col-sm-2">
+                <label class="control-label  ">From</label>
+                <input id="start_date" class="form-control" type="date" name="start_date" value="Start Date">
+            </div>
+            <div class="col-sm-2">
+                <label class="control-label  ">To</label>
+                <input id="end_date" class="form-control" type="date" name="end_date" value="End Date">
+            </div>
+            <div class="col-sm-2">
+                 {% csrf_token %}
+                <span id="generate_report_btn" class="btn btn-primary" role="button" style="margin: 10px;">Generate Report</span>
+            </div>
+        </form>
+
+    </div>
+    <div class="row"><hr style="width: 1200px; margin-left: auto; margin-top: 10px; margin-bottom: 10px"></div>
+    <div id="barchart_material" style="padding: 0; max-width: 50%; float: left">
+
+    </div>
+    <div style="max-width: 50%; float: right; padding: 5px; border-left: solid lightgrey 0.5px;">
+        <table id="table_bar_selected" class="table table-striped table-bordered table-hover
+            dataTable no-footer">
+                <thead>
+                <tr>
+                    <th>Challan ID</th>
+                    <th>Date</th>
+                    <th>Process</th>
+                    <th>Karigar</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                </tr>
+                </thead>
+                <tbody id="bar_transactions">
+
+                </tbody>
+        </table>
+    </div>
+
+{% endblock %}

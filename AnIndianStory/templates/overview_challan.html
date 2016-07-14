@@ -1,0 +1,42 @@
+{% extends "form_layout.html" %}
+{% block title %}
+    <title>Challan-Overview</title>
+{% endblock %}
+
+{% block content %}
+    <div class="col-sm-12" style="margin: 10px;">
+
+        <form action="" method="post" name="overview_challan_form" style="max-width: 85%; margin: auto;">
+            <h4>
+                <label class="label label-default">CHALLAN</label>
+            </h4>
+             {% csrf_token %}
+            <select class="chosen-select" id="id_clist" name="id_clist" data-placeholder="Select Challan">
+                        <option>all</option>
+                    {% for assignment in clist %}
+                        <option>{{ assignment.challanid }}</option>
+                    {% endfor %}
+            </select>
+        </form>
+    </div>
+    <div style="max-width: 80%; margin: auto;">
+
+        <span id="delete_btn" class="btn btn-primary" role="button" style="margin: 10px;">Delete Selected Assignment</span>
+        <table id="table_transactions" class="table table-striped table-bordered table-hover
+        dataTable no-footer" style="overflow: hidden; line-height: 50%">
+            <thead>
+            <tr>
+                <th>Challan ID</th>
+                <th>Date</th>
+                <th>Process</th>
+                <th>Karigar</th>
+                <th>Product</th>
+                <th>Quantity</th>
+            </tr>
+            </thead>
+            <tbody id="transactions">
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

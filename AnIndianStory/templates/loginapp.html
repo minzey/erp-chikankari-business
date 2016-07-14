@@ -1,0 +1,58 @@
+{% load bootstrap %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <title>Login</title>
+</head>
+<body style="background-color: teal">
+<div id="login">
+
+        <!--<form class="form-horizontal" name="LoginForm" action="/login/" method="post">
+
+        <div class="control-group">
+            <label class="control-label" for="username">Username</label>
+            <div class="controls">
+                <input type="text" id="username" name="username"  placeholder="Username">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+                <input type="password" name="password" id="password" placeholder="Password">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+        </form>-->
+
+    <div class="container">
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-4" style="margin-top: 100px; background-color: rgba(255, 255, 255, 0.6); border-radius: 8px; border: solid darkgray 1px;">
+            <h1 class="text-center login-title">Sign in to continue to Midas</h1>
+            <div class="account-wall">
+
+                <form class="form-horizontal" name="LoginForm" action="/login/" method="post">
+                    {% csrf_token %}
+                        {% if next %}
+                            <input type="hidden" name="next" value="{{ next }}" />
+                        {% endif %}
+                <input type="text" class="form-control" placeholder="Username" name="username" required >
+                <input type="password" class="form-control" placeholder="Password" name="password" required>
+                <button class="btn btn-lg btn-warning btn-block" type="submit" style="margin-bottom: 20px;">
+                    Sign in</button>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    </div>
+</div>
+</body>
+</html>

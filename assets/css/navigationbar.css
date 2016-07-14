@@ -1,0 +1,111 @@
+/***************************
+    NAVBAR
+****************************/
+
+.navbar-default {
+  background-color: #f2685a;
+  border-color: #c74c40;
+}
+.navbar-default .navbar-brand {
+  color: #ecf0f1;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus {
+  color: #ffbbbc;
+}
+.navbar-default .navbar-text {
+  color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a {
+  color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #ffbbbc;
+
+}
+.nav.navbar-nav li.active a,
+.nav.navbar-nav li.active a:hover,
+.nav.navbar-nav li.active a:focus {
+  color: #ffbbbc;
+  background-color: #c74c40;
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  color: #ffbbbc;
+  background-color: black;
+}
+.navbar-default .navbar-toggle {
+  border-color: #c74c40;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+  background-color: #c74c40;
+}
+
+.navbar-default .navbar-link:hover {
+  color: #ffbbbc;
+    background-color: #c74c40;
+}
+
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: #ecf0f1;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #ffbbbc;
+  }
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #ffbbbc;
+    background-color: #c74c40;
+  }
+}
+
+
+
+
+#products_issue tr td,#products_receive tr td, #products_reissue tr td{
+    font-size: 12px;
+}
+
+#karigars_issue tr td, #karigars_receive tr td, #karigars_reissue tr td{
+    font-size: 12px;
+}
+
+#products_issue tr:nth-child(even) td, #karigars_issue tr:nth-child(even) td{
+    background-color: #FDFFEC;
+}
+
+#products_issue tr:nth-child(odd) td, #karigars_issue tr:nth-child(odd) td{
+    background-color: #FEFFDC;
+}
+
+#products_receive tr:nth-child(even) td, #karigars_receive tr:nth-child(even) td{
+    background-color: #FFEEFC;
+}
+
+#products_receive tr:nth-child(odd) td, #karigars_receive tr:nth-child(odd) td{
+    background-color: #FFDFF9;
+}
+
+#products_reissue tr:nth-child(even) td, #karigars_reissue tr:nth-child(even) td{
+    background-color: #C5FFCC;
+}
+
+#products_reissue tr:nth-child(odd) td,#karigars_reissue tr:nth-child(odd) td{
+    background-color: #DFFFE4;
+}
+
+#all_products tr.selected td,
+#all_karigars tr.selected td,
+#transactions tr.selected td{
+    background-color: indianred;
+    color: white;
+}
+
+
+

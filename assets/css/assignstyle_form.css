@@ -1,0 +1,70 @@
+.button-group input{
+    margin:10px;
+    width: 100%;
+    display: none;
+}
+
+.button-group label{
+   width: 100%;
+}
+
+#process_button_ISSUE input:checked + label,
+#process_button_ISSUE input:checked + label:active {
+    background-color: lightyellow;
+    color: darkkhaki;
+    border: 2px solid darkkhaki;
+}
+
+#process_button_REISSUE input:checked + label,
+#process_button_REISSUE input:checked + label:active {
+    background-color: #dcffdc;
+    color: darkgreen;
+    border: 2px solid darkgreen;
+}
+
+#process_button_RECEIVE input:checked + label,
+#process_button_RECEIVE input:checked + label:active {
+  background-color: #ffe9ec;
+  color: hotpink;
+    border: 2px solid hotpink;
+}
+
+
+/***********************
+  OUTLINE BUTTONS
+************************/
+
+.btn.outline {
+    background: none;
+    padding: 12px 22px;
+}
+.btn-primary.outline {
+    border: 2px solid #0099cc;
+    color: #0099cc;
+}
+.btn-primary.outline:hover, .btn-primary.outline:focus, .btn-primary.outline:active, .btn-primary.outline.active, .open > .dropdown-toggle.btn-primary {
+    color: #33a6cc;
+    border-color: #33a6cc;
+}
+.btn-primary.outline:active, .btn-primary.outline.active {
+    border-color: #007299;
+    color: #007299;
+    box-shadow: none;
+}
+
+/***********************
+  CUSTON BTN VALUES
+************************/
+
+.btn {
+    padding: 14px 24px;
+    border: 0 none;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.btn:focus, .btn:active:focus, .btn.active:focus {
+    outline: 0 none;
+}
+
+

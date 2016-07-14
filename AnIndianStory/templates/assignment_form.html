@@ -1,0 +1,94 @@
+{% extends "form_layout.html" %}
+{% load bootstrap %}
+{% load static from staticfiles %}
+
+{% block custom_css %}
+
+<link rel="stylesheet" href="{% static 'css/assignstyle_form.css' %}" type="text/css"  />
+{% endblock %}
+
+{% block title %}
+<title>Assign</title>
+{% endblock %}
+
+{% block content %}
+        <div class="container">
+            <div class="row">
+                <div class="page-header">
+                    <h2>{{ karigar.name }} - <small>{{ karigar.profile }}</small></h2>
+                </div>
+
+
+
+                    <form class="form" role="form" action="" method="POST">
+                        {% if errors %}
+
+
+                                {% for error in errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error }}</strong>
+                                    </div>
+                                {% endfor %}
+
+
+                        {% endif %}
+                        {% csrf_token %}
+                        {{ formset.management_form }}
+                        <div class="row" style="margin-bottom: 10px">
+
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <label class="control-label  " >Challan ID</label>
+                                <input class="form-control" type="number" name="challan_id" value="Challan ID" >
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="control-label  " >Date</label>
+                                <input class="form-control" type="date" name="date_assignment" value="Date of Assignment" >
+                            </div>
+                        </div>
+                        <div class="row">
+                        <div class="button-group round toggle">
+                            <div class="col-sm-2 col-sm-offset-3 text-center" id="process_button_ISSUE">
+                                <input type="radio" id="r1" value="issue" name="ck">
+                                <label class="btn btn-primary btn-lg outline center" for="r1">ISSUE</label>
+                            </div>
+                            <div class="col-sm-2 text-center" id="process_button_RECEIVE">
+                                <input type="radio" id="r2" value="receive" name="ck">
+                                <label class="btn btn-primary btn-lg outline center" for="r2">RECEIVE</label>
+                            </div>
+                            <div class="col-sm-2 text-center" id="process_button_REISSUE">
+                                <input type="radio" id="r3" value="reissue" name="ck">
+                                <label class="btn btn-primary btn-lg outline center" for="r3">REISSUE</label>
+                            </div>
+
+                        </div>
+                        </div>
+
+                        <div class="row" style="margin: 2%">
+                            {% for myform in formset %}
+                                <div class="col-sm-4" style="border: solid lightgrey 0.5px; border-radius: 10px;  padding: 10px">
+                                    {{ myform|bootstrap }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    {% csrf_token %}
+                                    <input type="submit" name="save" class="btn btn-primary" value="save" />
+                                    <input id="goto_overview_from_assign" type="submit" name="save_overview"
+                                           class="btn btn-primary" value="save and overview" data-karigarname="{{ karigar.name }}" />
+
+                                </div>
+                            </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+
+
+
+
