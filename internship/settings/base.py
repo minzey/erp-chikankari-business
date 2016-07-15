@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'AnIndianStory',
     'bootstrapform',
-    ' psycopg2',
+    'psycopg2',
 ]
 
 MIDDLEWARE_CLASSES = [
