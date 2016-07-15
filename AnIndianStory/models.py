@@ -22,7 +22,7 @@ class Assignment(models.Model):
 
     class Meta:
         managed = False
-        #db_table = 'assignments'
+        db_table = 'assignments'
         unique_together = (('challanid', 'process','karigar','product'),)
         verbose_name_plural="Assignments"
 
@@ -37,7 +37,7 @@ class Bill(models.Model):
 
     class Meta:
         managed = False
-        #db_table = 'bills'
+        db_table = 'bills'
         verbose_name_plural = "Bills"
 
     def __str__(self):
@@ -67,7 +67,7 @@ class Karigar(models.Model):
 
     class Meta:
         managed = False
-        #db_table = 'karigars'
+        db_table = 'karigars'
         verbose_name_plural = "Karigars"
 
     def __str__(self):
@@ -88,7 +88,7 @@ class Product(models.Model):
 
     class Meta:
         managed = False
-        #db_table = 'products'
+        db_table = 'products'
         verbose_name_plural = "Products"
 
     def __str__(self):
