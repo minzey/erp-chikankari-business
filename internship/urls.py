@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib.auth.views import logout
 
+admin.autodiscover()
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
