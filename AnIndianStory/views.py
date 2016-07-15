@@ -113,6 +113,8 @@ def assign_product(request,name_pk):
         form.fields['product'].queryset = list_of_assigned_products
 
     '''
+    for form in formset:
+        form.fields['product'].queryset = models.Product.objects.all()
     if request.method == 'POST':
 
         formset = forms.AssignFormSet(request.POST,

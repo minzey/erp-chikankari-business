@@ -44,14 +44,14 @@ class ProductForm(forms.ModelForm):
 class AssignForm(forms.ModelForm):
     class Meta:
         model = models.Assignment
-        CHOICES =  models.Product.objects.all().reverse()
+        #CHOICES = models.Product.objects.all()
         fields = [
 
             'product',
             'qty'
         ]
         widgets = {
-            'product' : Select(choices=( (x.prodid) for x in CHOICES )),
+            #'product' : Select(choices=((x.prodid) for x in CHOICES )),
         }
 
 
