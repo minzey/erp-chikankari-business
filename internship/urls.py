@@ -26,7 +26,7 @@ from django.contrib.auth.views import logout
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'', views.login_user),
+
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.login_user, name='login'),
     url(r'^logout/$', logout, kwargs={'next_page': 'login'}, name='logout'),
@@ -50,6 +50,7 @@ urlpatterns = [
     url(r'^overview_dates/get_report/$', login_required(views.getTableDate_ActiveProducts), name='get_report'),
     url(r'^overview_dates/get_report_table/$', login_required(views.getTableData_Process), name='get_report_table'),
     url(r'^overview_challans/delete_assignment/$', login_required(views.deleteAssignment), name='delete_assignment'),
+    url(r'', views.login_user),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
