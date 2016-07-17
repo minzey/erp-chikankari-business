@@ -98,21 +98,7 @@ def assign_product(request,name_pk):
     karigar = get_object_or_404(models.Karigar,pk=name_pk)
     formset = forms.AssignFormSet(queryset=models.Assignment.objects.none())
     errors = []
-    '''
-    list_of_assigned_products = models.Assignment.objects.filter(karigar=karigar).values_list('product', flat=True)
-    all_products = models.Product.objects.values_list('prodid', flat=True)
-    list_of_unassigned_products = all_products.exclude(prodid__in=list_of_assigned_products).values_list('prodid', flat=True)
-    res=[]
-    for x in list_of_assigned_products:
-        res.append(str(x))
 
-    for x in list_of_unassigned_products:
-        res.append(str(x))
-
-    for form in formset:
-        form.fields['product'].queryset = list_of_assigned_products
-
-    '''
     for form in formset:
         form.fields['product'].queryset = models.Product.objects.all()
     if request.method == 'POST':
