@@ -53,11 +53,9 @@
                 {% for karigar in karigars %}
 
                 <tr>
-                    {% if karigar.photo != '/media/'%}
-                        <td><a href="{{ karigar.photo }}"><img src="{{ karigar.photo }}"  class="img-circle" width="70" height="70"></a></td>
-                    {% else %}
-                        <td><img src="/media/default_image.png"  class="img-circle" width="70" height="70"></td>
-                    {% endif %}
+
+                    <td><img src="/media/default_image.png"  class="img-circle" width="70" height="70"></td>
+
                     <td>
                         <a href="{% url 'new_product_assign' name_pk=karigar.pk %}">{{ karigar.name }}</a>
                     </td>

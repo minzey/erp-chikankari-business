@@ -26,6 +26,7 @@ from django.contrib.auth.views import logout
 admin.autodiscover()
 
 urlpatterns = [
+    url(r'', login_required(views.karigars_all())),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.login_user, name='login'),
     url(r'^logout/$', logout, kwargs={'next_page': 'login'}, name='logout'),
