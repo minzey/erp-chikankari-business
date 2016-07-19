@@ -57,7 +57,7 @@ class Karigar(models.Model):
         (WASH,'Wash'),
         (ADDON,'Addon'),
     )
-    name = models.CharField(primary_key=True, max_length=20)
+    name = models.CharField(primary_key=True, max_length=100)
     profile = models.CharField(max_length=20, choices=PROFILE_CHOICES, null=False, blank=False)
     phone = models.CharField(max_length=13, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
