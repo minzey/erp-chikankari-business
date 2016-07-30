@@ -29,7 +29,7 @@ urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.login_user, name='login'),
-    url(r'^logout/$', logout, kwargs={'next_page': 'login'}, name='logout'),
+    url(r'^logout/$', logout, kwargs={'next_page': '/login/'}, name='logout'),
     url(r'^homepage/$',login_required(views.homepage), name='home'),
     url(r'^karigars_all/$', login_required(views.karigars_all), name='karigars_all'),
     url(r'^products_all/$', login_required(views.products_all), name='products_all'),

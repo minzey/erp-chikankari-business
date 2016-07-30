@@ -3,7 +3,7 @@ import os
 import dj_database_url
 
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = True
 
 db_from_env = dj_database_url.config(conn_max_age=500)

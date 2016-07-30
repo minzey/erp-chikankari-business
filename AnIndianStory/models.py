@@ -57,7 +57,7 @@ class Karigar(models.Model):
         (WASH,'Wash'),
         (ADDON,'Addon'),
     )
-    name = models.CharField(primary_key=True, max_length=100)
+    name = models.CharField(primary_key=True, max_length=20)
     profile = models.CharField(max_length=20, choices=PROFILE_CHOICES, null=False, blank=False)
     phone = models.CharField(max_length=13, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
@@ -66,7 +66,7 @@ class Karigar(models.Model):
     photo = models.ImageField(upload_to='karigars/', blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'karigars'
         verbose_name_plural = "Karigars"
 
