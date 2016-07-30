@@ -69,7 +69,10 @@ def new_product(request):
     if request.method == 'POST':
         form = forms.ProductForm(request.POST,request.FILES)
         if form.is_valid():
-            product = form.save()
+            product = form.save(commit=False)
+            product.fabric = product.fabric.lower()
+            product.colour = product.colour.lower()
+            product.save()
             messages.success(request,"New product added.")
             return HttpResponseRedirect('../../products_all/')
     return render(request, '../templates/newproduct_form.html', {'form':form})
