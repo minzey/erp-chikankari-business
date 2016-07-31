@@ -14,6 +14,10 @@ from django.core import serializers
 
 from django.http import HttpResponse
 
+def reset_connection():
+    from django.db import connection
+    connection.close()
+
 def login_user(request):
     logout(request)
     username = password = ''
@@ -145,12 +149,14 @@ def assign_product(request,name_pk):
 
 
 def karigars_all(request):
+    reset_connection()
     karigars = models.Karigar.objects.all().order_by('name')
     for karigar in karigars:
         karigar.photo = "/media/"+str(karigar.photo)
     return render(request, '../templates/karigar_list.html', {'karigars': karigars})
 
 def products_all(request):
+    reset_connection()
     products = models.Product.objects.all()
     for product in products:
         product.photo = "/media/"+str(product.photo)
@@ -159,6 +165,7 @@ def products_all(request):
 
 
 def overview_karigars(request):
+    reset_connection()
     klist = models.Karigar.objects.all()
     return render(request, 'overview_karigar.html',{'klist': klist})
 
@@ -206,6 +213,7 @@ def getTableKarigar(request):
 
 
 def overview_products(request):
+    reset_connection()
     plist = models.Product.objects.all()
     return render(request, 'overview_product.html', {'plist': plist})
 
@@ -252,6 +260,7 @@ def getTableProduct(request):
 
 
 def overview_challans(request):
+    reset_connection()
     clist = models.Assignment.objects.all().values('challanid').distinct()
     return render(request, 'overview_challan.html', {'clist': clist})
 
