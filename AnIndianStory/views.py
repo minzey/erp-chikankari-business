@@ -149,25 +149,34 @@ def assign_product(request,name_pk):
 
 
 def karigars_all(request):
-    reset_connection()
-    karigars = models.Karigar.objects.all().order_by('name')
-    for karigar in karigars:
-        karigar.photo = "/media/"+str(karigar.photo)
-    return render(request, '../templates/karigar_list.html', {'karigars': karigars})
+    #reset_connection()
+    try:
+        karigars = models.Karigar.objects.all().order_by('name')
+        for karigar in karigars:
+            karigar.photo = "/media/"+str(karigar.photo)
+        return render(request, '../templates/karigar_list.html', {'karigars': karigars})
+    except:
+        return render(request, '../templates/test_eror.html')
 
 def products_all(request):
-    reset_connection()
-    products = models.Product.objects.all()
-    for product in products:
-        product.photo = "/media/"+str(product.photo)
-    return render(request, '../templates/product_list.html', {'products': products})
+    #reset_connection()
+    try:
+        products = models.Product.objects.all()
+        for product in products:
+            product.photo = "/media/"+str(product.photo)
+        return render(request, '../templates/product_list.html', {'products': products})
+    except:
+        return render(request, '../templates/test_eror.html')
 
 
 
 def overview_karigars(request):
-    reset_connection()
-    klist = models.Karigar.objects.all()
-    return render(request, 'overview_karigar.html',{'klist': klist})
+    #reset_connection()
+    try:
+        klist = models.Karigar.objects.all()
+        return render(request, 'overview_karigar.html',{'klist': klist})
+    except:
+        return render(request, 'test_eror.html')
 
 
 
@@ -213,9 +222,12 @@ def getTableKarigar(request):
 
 
 def overview_products(request):
-    reset_connection()
-    plist = models.Product.objects.all()
-    return render(request, 'overview_product.html', {'plist': plist})
+    #reset_connection()
+    try:
+        plist = models.Product.objects.all()
+        return render(request, 'overview_product.html', {'plist': plist})
+    except:
+        return render(request, 'test_eror.html')
 
 
 def getTableProduct(request):
@@ -260,9 +272,12 @@ def getTableProduct(request):
 
 
 def overview_challans(request):
-    reset_connection()
-    clist = models.Assignment.objects.all().values('challanid').distinct()
-    return render(request, 'overview_challan.html', {'clist': clist})
+    #reset_connection()
+    try:
+        clist = models.Assignment.objects.all().values('challanid').distinct()
+        return render(request, 'overview_challan.html', {'clist': clist})
+    except:
+        return render(request,'test_eror.html')
 
 def getTableChallan(request):
     challan_id = request.GET['challan_id']
