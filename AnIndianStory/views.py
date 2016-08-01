@@ -302,7 +302,10 @@ def deleteAssignment(request):
 
 
 def overview_dates(request):
-    return render(request, 'overview_date.html')
+    try:
+        return render(request, 'overview_date.html')
+    except:
+        return render(request, 'test_eror.html')
 
 def getTableDate_ActiveProducts(request):
     start_date = request.GET['start_date']
