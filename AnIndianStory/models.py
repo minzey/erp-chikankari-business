@@ -11,8 +11,7 @@ from django.db import models
 
 
 class Assignment(models.Model):
-
-    challanid = models.IntegerField()
+    challanid = models.CharField(max_length=255,null=False,blank=False)
     process = models.CharField(max_length=10, null=False, blank=False)
     karigar = models.ForeignKey('Karigar', models.DO_NOTHING, db_column='karigar')
     product = models.ForeignKey('Product', models.DO_NOTHING, db_column='product')
@@ -21,13 +20,13 @@ class Assignment(models.Model):
     assignment_id = models.AutoField(primary_key=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'assignments'
         unique_together = (('challanid', 'process','karigar','product'),)
         verbose_name_plural="Assignments"
 
     def __str__(self):
-        return str(self.challanid)
+        return self.challanid
 
 class Bill(models.Model):
     billingid = models.IntegerField(primary_key=True)
@@ -36,7 +35,7 @@ class Bill(models.Model):
     amountpaid = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'bills'
         verbose_name_plural = "Bills"
 
@@ -57,7 +56,7 @@ class Karigar(models.Model):
         (WASH,'Wash'),
         (ADDON,'Addon'),
     )
-    name = models.CharField(primary_key=True, max_length=20)
+    name = models.CharField(primary_key=True, max_length=40)
     profile = models.CharField(max_length=20, choices=PROFILE_CHOICES, null=False, blank=False)
     phone = models.CharField(max_length=13, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
@@ -87,7 +86,7 @@ class Product(models.Model):
     cost_addon = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'products'
         verbose_name_plural = "Products"
 

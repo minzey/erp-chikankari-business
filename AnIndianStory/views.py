@@ -164,7 +164,7 @@ def products_all(request):
         products = models.Product.objects.all()
         for product in products:
             product.photo = "/media/"+str(product.photo)
-        return render(request, '../templates/product_list.html', {'products': products})
+        return render(request, '../templates/product_list_new.html', {'products': products})
     except:
         return render(request, '../templates/test_eror.html')
 

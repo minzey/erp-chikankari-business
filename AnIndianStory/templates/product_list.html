@@ -19,7 +19,7 @@
 
     <hr>
     {% for product in products %}
-    <div class="col-sm-3 col-md-3">
+    <div class="col-sm-4 col-md-4">
 
         <div class="thumbnail">
             <img src="/static/default_image.png" style="width: 100%; height: 200px; object-fit: cover; border: solid darkgray 1px;" >
@@ -34,14 +34,14 @@
 
                 </h4>
 
-                <div style="float: left; width: 20%; line-height: 30%;">
-                    <p><strong>Fabric</strong></p>
-                    <p>{{ product.fabric }}</p>
-                    <p><strong>Colour</strong></p>
-                    <p>{{ product.colour }}</p>
+                <div style="float: left; width: 40%;">
+                    <p style="line-height: 30%;"><strong>Fabric</strong></p>
+                    <p style="line-height: 90%">{{ product.fabric }}</p>
+                    <p style="line-height: 30%;"><strong>Colour</strong></p>
+                    <p style="line-height: 90%;">{{ product.colour }}</p>
                 </div>
                 {% if request.user.is_superuser %}
-                    <div style="float: right; width: 80%; line-height: 40%;">
+                    <div style="float: right; width: 60%; line-height: 40%;">
                         <p><strong>Cost</strong></p>
                         <table style="line-height: normal">
                             <thead>

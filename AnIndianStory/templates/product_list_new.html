@@ -2,7 +2,7 @@
 {% load static from staticfiles %}
 
 {% block title %}
-<title>All Karigars</title>
+<title>All Products</title>
 {% endblock %}
 
 {% block content %}
@@ -22,13 +22,13 @@
 
                 <div class="input-group" style="width: 70%; float: left">
                     <input type="text" class="form-control"
-                           placeholder="Search Karigar" id="searchInput"/>
+                           placeholder="Search Product" id="searchInput"/>
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-search"></i>
                     </span>                    
                 </div>
                 <div class="input-group-btn" style="width: 30%; float: right;">
-                    <a href="{% url 'new_karigar' %}" class="btn btn-primary pull-right" role="button">Add Karigar</a>
+                    <a href="{% url 'new_product' %}" class="btn btn-primary pull-right" role="button">Add Product</a>
                 </div>
             </div>
         </div>
@@ -40,31 +40,40 @@
             <thead>
                 <tr>
                     <th>Photo</th>
-                    <th>Name</th>
-                    <th>Profile</th>
-                    <th>Address</th>
-                    <th>Contact</th>
-                    <th>PAN number</th>
+                    <th>ProductID</th>
+                    <th>Fabric</th>
+                    <th>Colour</th>
+                    {% if request.user.is_superuser %}
+                        <th>Stitch</th>
+                        <th>Block</th>
+                        <th>Emb</th>
+                        <th>Wash</th>
+                        <th>Addon</th>
+                    {% endif %}
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
               </thead>
               <tbody id="klist">
-                {% for karigar in karigars %}
+                {% for product in products %}
 
                 <tr>
 
                     <td><img src="/static/default_image.png"  class="img-circle" width="70" height="70"></td>
 
-                    <td style="font-weight: 900">
-                        <a href="{% url 'new_product_assign' name_pk=karigar.pk %}">{{ karigar.name }}</a>
-                    </td>
-                    <td>{{ karigar.profile }}</td>
-                    <td>{{ karigar.address }}</td>
-                    <td>{{ karigar.phone }}</td>
-                    <td>{{ karigar.pan }}</td>
-                    <td><a href="{% url 'edit_karigar' name_pk=karigar.pk %}"><span class="glyphicon glyphicon-edit"></span></a></td>
-                    <td><a href="{% url 'delete_karigar' name_pk=karigar.pk %}" onclick="return confirm('Are you sure you want to delete all records of {{ karigar.name }}?')"><span class="glyphicon glyphicon-trash"></span></td>
+                    <td style="font-weight: 900;">{{ product.prodid }}</td>
+                    <td>{{ product.fabric }}</td>
+                    <td>{{ product.colour }}</td>
+                    {% if request.user.is_superuser %}
+                        <td>{{ product.cost_stitch }}</td>
+                        <td>{{ product.cost_block }}</td>
+                        <td>{{ product.cost_emb }}</td>
+                        <td>{{ product.cost_wash }}</td>
+                        <td>{{ product.cost_addon }}</td>
+                    {% endif %}
+
+                    <td><a href="{% url 'edit_product' id_pk=product.pk %}"><span class="glyphicon glyphicon-edit"></span></a></td>
+                    <td><a href="{% url 'delete_product' id_pk=product.pk %}" onclick="return confirm('Are you sure you want to delete all records of {{ product.prodid }}?')"><span class="glyphicon glyphicon-trash"></span></a></td>
                 </tr>
                 {% endfor %}
 
