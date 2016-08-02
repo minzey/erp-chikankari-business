@@ -26,7 +26,7 @@ class Assignment(models.Model):
         verbose_name_plural="Assignments"
 
     def __str__(self):
-        return self.challanid
+        return str(self.challanid)
 
 class Bill(models.Model):
     billingid = models.IntegerField(primary_key=True)
@@ -40,7 +40,7 @@ class Bill(models.Model):
         verbose_name_plural = "Bills"
 
     def __str__(self):
-        return self.billingid
+        return str(self.billingid)
 
 
 class Karigar(models.Model):
