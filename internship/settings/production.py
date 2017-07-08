@@ -20,6 +20,7 @@ ALLOWED_HOSTS = ['*']
 
 AWS_PRELOAD_METADATA = True
 AWS_QUERYSTRING_AUTH = True
+AWS_STORAGE_BUCKET_NAME = 'taanabaana'
 S3DIRECT_REGION = 'ap-southeast-1'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 S3_URL = '//%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
