@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'AnIndianStory',
     'bootstrapform',
     'psycopg2',
+    'storages',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -127,6 +128,17 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
+AWS_ACCESS_KEY_ID = "AKIAJBZOY2CWTBOQLKXQ"
+AWS_SECRET_ACCESS_KEY = "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"
+# MediaRootS3BotoStorage = lambda: S3Boto3Storage(location='media')
+os.environ["AWS_STORAGE_BUCKET_NAME"]="taanabaana"
+AWS_STORAGE_BUCKET_NAME = 'taanabaana'
+S3DIRECT_REGION = 'ap-south-1'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+S3_URL = '//%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+MEDIA_URL = '//%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+MEDIA_ROOT = MEDIA_URL
+
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (

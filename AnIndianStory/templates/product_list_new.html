@@ -58,8 +58,12 @@
                 {% for product in products %}
 
                 <tr>
-
-                    <td><img src="/static/default_image.png"  class="img-circle" width="70" height="70"></td>
+                    {% if product.photo.url != "" %}
+                        <td><img src="{{ product.photo.url }}"  width="100" height="100"></td>
+                    <!--<td><img src="/static/default_image.png"  class="img-circle" width="70" height="70"></td>-->
+                    {% else %}
+                        <td><img src="/static/default_image.png"  width="100" height="100"></td>
+                    {% endif %}
 
                     <td style="font-weight: 900;">{{ product.prodid }}</td>
                     <td>{{ product.fabric }}</td>

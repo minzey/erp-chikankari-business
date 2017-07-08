@@ -152,8 +152,6 @@ def karigars_all(request):
     #reset_connection()
     try:
         karigars = models.Karigar.objects.all().order_by('name')
-        for karigar in karigars:
-            karigar.photo = "/media/"+str(karigar.photo)
         return render(request, '../templates/karigar_list.html', {'karigars': karigars})
     except:
         return render(request, '../templates/test_eror.html')
@@ -162,8 +160,6 @@ def products_all(request):
     #reset_connection()
     try:
         products = models.Product.objects.all()
-        for product in products:
-            product.photo = "/media/"+str(product.photo)
         return render(request, '../templates/product_list_new.html', {'products': products})
     except:
         return render(request, '../templates/test_eror.html')
