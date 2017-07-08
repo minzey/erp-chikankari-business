@@ -58,7 +58,7 @@ class AssignForm(forms.ModelForm):
 AssignFormSet = forms.modelformset_factory(
     models.Assignment,
     form=AssignForm,
-    extra=6,
+    extra=3,
 )
 
 
