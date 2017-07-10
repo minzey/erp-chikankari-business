@@ -279,8 +279,10 @@ $(document).ready(function() {
                             reissuetable.clear().draw();
 
                             for (var i = 0; i < json.length; i++) {
-                                console.log("adding row to main table");
-                                table.row.add([json[i].product, json[i].total_issued,
+
+                                // console.log("adding row to main table"+json[i].product+' '+json[i]['size']);
+                                // console.log(json[i]['size']);
+                                table.row.add([json[i].product,json[i]['size'], json[i].total_issued,
                                     json[i].total_received, json[i].pending]).draw();
 
 
@@ -299,20 +301,22 @@ $(document).ready(function() {
                                     $(this).addClass('selected');
                                 }
                                 product_selected = table.row( this ).data()[0];
+                                size_selected = table.row(this).data()[1];
                                 console.log( "selected product: "+ table.row( this ).data()[0] );
+                                console.log("selected size: "+size_selected);
                                 issuetable.clear().draw();
                                 receivetable.clear().draw();
                                 reissuetable.clear().draw();
                                 console.log("length json inside click: "+json.length);
                                 for(var i = 0; i<json.length; i++){
-                                    console.log(i+" "+ json[i]);
-                                    if (json[i].product == product_selected){
+                                    //console.log(i+" "+ json[i]);
+                                    if (json[i].product == product_selected && json[i].size == size_selected){
                                         console.log("object found in ");
                                         console.log(json[i]);
                                         if(json[i].issue_transactions != 'No transactions') {
                                             obj = $.parseJSON(json[i].issue_transactions);
-                                            console.log("parsed json issue transs");
-                                            console.log(obj);
+                                            //console.log("parsed json issue transs");
+                                            //console.log(obj);
 
                                             for (var j = 0; j < obj.length; j++) {
                                                 issuetable.row.add([obj[j].fields.challanid,
@@ -323,8 +327,8 @@ $(document).ready(function() {
 
                                         if(json[i].receive_transactions != 'No transactions') {
                                             obj = $.parseJSON(json[i].receive_transactions);
-                                            console.log("parsed json receive transs");
-                                            console.log(obj);
+                                            //console.log("parsed json receive transs");
+                                            //console.log(obj);
 
                                             for (var j = 0; j < obj.length; j++) {
                                                 receivetable.row.add([obj[j].fields.challanid,
@@ -335,8 +339,8 @@ $(document).ready(function() {
 
                                         if(json[i].reissue_transactions != 'No transactions') {
                                             obj = $.parseJSON(json[i].reissue_transactions);
-                                            console.log("parsed json reissue transs");
-                                            console.log(obj);
+                                            //console.log("parsed json reissue transs");
+                                            //console.log(obj);
 
                                             for (var j = 0; j < obj.length; j++) {
                                                 reissuetable.row.add([obj[j].fields.challanid,
@@ -513,7 +517,7 @@ $(document).ready(function() {
                                 //console.log("adding "+ json[i]);
 
                                 ctable.row.add([json[i].fields['challanid'], json[i].fields['assignmentdate'], json[i].fields['process'],
-                                    json[i].fields['karigar'], json[i].fields['product'], json[i].fields['qty']]).draw();
+                                    json[i].fields['karigar'], json[i].fields['product'], json[i].fields['size'], json[i].fields['qty']]).draw();
                             }
                             $('#transactions').unbind();
                             $('#transactions').on( 'click', 'tr', function (e) {
@@ -543,14 +547,15 @@ $(document).ready(function() {
                                         challan_id : challan_selected[0],
                                         karigar : challan_selected[3],
                                         product : challan_selected[4],
-                                        qty : challan_selected[5],
+                                        size: challan_selected[5],
+                                        qty : challan_selected[6],
                                         csrfmiddlewaretoken: '{{ csrf_token }}'
                                     },
                                     success: function(response){
                                         console.log(response);
                                         alert("Deleted successfully:\n"+response[0].fields['challanid']+"\n"+response[0].fields['assignmentdate']+"\n"+
                                         response[0].fields['karigar']+"\n"+response[0].fields['process']+
-                                        "\n"+response[0].fields['product']+"\n"+response[0].fields['qty']);
+                                        "\n"+response[0].fields['product']+"\n"+response[0].fields['qty']+"\n"+response[0].fields['size']);
                                         console.log(response[0].fields['challanid']);
                                         console.log(response[0].fields['assignmentdate']);
                                         console.log(response[0].fields['karigar']);

@@ -56,7 +56,7 @@
 
                     <!--<td><img src="/static/default_image.png"  class="img-circle" width="70" height="70"></td>-->
                     {% if karigar.photo.url != "" %}
-                        <td><img src="{{ karigar.photo.url }}"  width="70" height="70"></td>
+                        <td><img src="{{ karigar.photo.url }}"  width="70" height="70" style="object-fit: cover"></td>
                     {% else %}
                         <td><img src="/static/default_image.png"  width="70" height="70"></td>
                     {% endif %}

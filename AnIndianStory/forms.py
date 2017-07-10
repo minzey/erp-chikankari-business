@@ -48,6 +48,7 @@ class AssignForm(forms.ModelForm):
         fields = [
 
             'product',
+            'size',
             'qty'
         ]
         widgets = {

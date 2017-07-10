@@ -11,10 +11,27 @@ from django.db import models
 
 
 class Assignment(models.Model):
+    XS="XS"
+    S="S"
+    M="M"
+    L="L"
+    XL="XL"
+    XXL="XXL"
+    DEFAULT="--"
     challanid = models.CharField(max_length=255,null=False,blank=False)
     process = models.CharField(max_length=10, null=False, blank=False)
     karigar = models.ForeignKey('Karigar', models.DO_NOTHING, db_column='karigar')
     product = models.ForeignKey('Product', models.DO_NOTHING, db_column='product')
+    SIZE_CHOICES = (
+        (DEFAULT, '--'),
+        (XS, 'XS'),
+        (S, 'S'),
+        (M, 'M'),
+        (L, 'L'),
+        (XL, 'XL'),
+        (XXL, 'XXL'),
+    )
+    size = models.CharField(max_length=10, choices=SIZE_CHOICES, default="--")
     qty = models.IntegerField(default=0)
     assignmentdate = models.DateField(null=False, blank=False)
     assignment_id = models.AutoField(primary_key=True)
@@ -22,7 +39,7 @@ class Assignment(models.Model):
     class Meta:
         managed = True
         db_table = 'assignments'
-        unique_together = (('challanid', 'process','karigar','product'),)
+        unique_together = (('challanid', 'process','karigar','product', 'size'),)
         verbose_name_plural="Assignments"
 
     def __str__(self):

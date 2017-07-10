@@ -181,7 +181,7 @@ def getTableKarigar(request):
 
     name_pk = request.GET['karigar_name']
     karigar = get_object_or_404(models.Karigar, pk=name_pk)
-    resultset = models.Assignment.objects.filter(karigar=karigar).values('product').annotate(
+    resultset = models.Assignment.objects.filter(karigar=karigar).values('product','size').annotate(
         total_issued=Sum(
             Case(When(process='issue', then='qty'), default=Value(0), output_field=IntegerField())),
         sum_received=Sum(
@@ -192,21 +192,23 @@ def getTableKarigar(request):
     )
     #print resultset
     for result in resultset:
+        print 'prduct =  ', result['product']
+        print 'size = ', result['size']
         result['total_received'] = result['sum_received'] - result['sum_reissued']
         result['pending'] = result['total_issued'] - result['total_received']
-        q1 = karigar.assignment_set.filter(product=result['product']).filter(process='issue')
+        q1 = karigar.assignment_set.filter(product=result['product']).filter(process='issue').filter(size=result['size'])
         if not q1:
             result['issue_transactions'] = 'No transactions'
         else:
             result['issue_transactions']= serializers.serialize('json',q1, fields=('challanid','assignmentdate','qty'))
             #result['issue_transactions'] =q1
-        q2 = karigar.assignment_set.filter(product=result['product']).filter(process='receive')
+        q2 = karigar.assignment_set.filter(product=result['product']).filter(process='receive').filter(size=result['size'])
         if not q2:
             result['receive_transactions']= 'No transactions'
         else:
             result['receive_transactions'] = serializers.serialize('json',q2, fields=('challanid','assignmentdate','qty'))
             #result['receive_transactions'] =q2
-        q3 = karigar.assignment_set.filter(product=result['product']).filter(process='reissue')
+        q3 = karigar.assignment_set.filter(product=result['product']).filter(process='reissue').filter(size=result['size'])
         if not q3:
             result['reissue_transactions']= 'No transactions'
         else:
@@ -278,7 +280,7 @@ def overview_challans(request):
 def getTableChallan(request):
     challan_id = request.GET['challan_id']
     if challan_id == 'all':
-        q = models.Assignment.objects.all().order_by('-assignment_id')
+        q = models.Assignment.objects.all().order_by('-assignment_id')[:200]
     else:
         q = models.Assignment.objects.filter(challanid=challan_id)
     data = serializers.serialize('json',q)
@@ -290,9 +292,10 @@ def deleteAssignment(request):
     product = request.GET['product']
     qty = request.GET['qty']
     karigar = request.GET['karigar']
-    q = models.Assignment.objects.filter(challanid=challan_id).filter(product=product).filter(karigar=karigar).filter(qty=qty)
+    size = request.GET['size']
+    q = models.Assignment.objects.filter(challanid=challan_id).filter(product=product).filter(karigar=karigar).filter(size=size).filter(qty=qty)
     data = serializers.serialize('json',q)
-    models.Assignment.objects.filter(challanid=challan_id).filter(product=product).filter(karigar=karigar).filter(qty=qty).delete()
+    models.Assignment.objects.filter(challanid=challan_id).filter(product=product).filter(karigar=karigar).filter(size=size).filter(qty=qty).delete()
 
     return HttpResponse(data, content_type='application/json')
 
