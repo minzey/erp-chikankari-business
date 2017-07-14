@@ -59,7 +59,19 @@ class AssignForm(forms.ModelForm):
 AssignFormSet = forms.modelformset_factory(
     models.Assignment,
     form=AssignForm,
-    extra=3,
+    extra=6,
 )
 
 
+class EditAssignmentForm(forms.ModelForm):
+    class Meta:
+        model = models.Assignment
+        fields = [
+            'challanid',
+            'process',
+            'karigar',
+            'product',
+            'size',
+            'qty',
+            'assignmentdate'
+        ]

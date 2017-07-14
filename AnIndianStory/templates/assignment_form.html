@@ -36,13 +36,23 @@
                         {{ formset.management_form }}
                         <div class="row" style="margin-bottom: 10px">
 
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    {% csrf_token %}
+                                    <input type="submit" name="save" class="btn btn-primary" value="save" />
+                                    <input id="goto_overview_from_assign" type="submit" name="save_overview"
+                                           class="btn btn-primary" value="save and overview" data-karigarname="{{ karigar.name }}" />
+
+                                </div>
+                            </div>
+
                             <div class="col-sm-4 col-sm-offset-2">
                                 <label class="control-label  " >Challan ID</label>
-                                <input class="form-control" type="text" name="challan_id" value="" >
+                                <input class="form-control" type="text" name="challan_id" value={{ challan_id }} >
                             </div>
                             <div class="col-sm-4">
                                 <label class="control-label  " >Date</label>
-                                <input class="form-control" type="date" name="date_assignment" value="Date of Assignment" >
+                                <input class="form-control" type="date" name="date_assignment" value={{ date_of_assignment }} >
                             </div>
                         </div>
                         <div class="row">
@@ -63,6 +73,7 @@
                         </div>
                         </div>
 
+
                         <div class="row" style="margin: 2%">
                             {% for myform in formset %}
                                 <div class="col-sm-4" style="border: solid lightgrey 0.5px; border-radius: 10px;  padding: 10px">
@@ -72,15 +83,7 @@
                         </div>
 
 
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    {% csrf_token %}
-                                    <input type="submit" name="save" class="btn btn-primary" value="save" />
-                                    <input id="goto_overview_from_assign" type="submit" name="save_overview"
-                                           class="btn btn-primary" value="save and overview" data-karigarname="{{ karigar.name }}" />
 
-                                </div>
-                            </div>
 
                     </form>
                 </div>

@@ -13,6 +13,7 @@ from django.core import serializers
 # Create your views here.
 
 from django.http import HttpResponse
+from django.db import IntegrityError
 
 def reset_connection():
     from django.db import connection
@@ -92,6 +93,22 @@ def edit_product(request, id_pk):
             return HttpResponseRedirect('../../products_all/')
     return render(request, '../templates/newproduct_form.html', {'form':form})
 
+def edit_assignment(request, id_pk):
+    assignment = get_object_or_404(models.Assignment, pk=id_pk)
+    form = forms.EditAssignmentForm(instance=assignment)
+    errors=[]
+    if request.method == 'POST':
+        form = forms.EditAssignmentForm(request.POST, instance=assignment)
+        if form.is_valid():
+            assignment = form.save()
+            messages.success(request,'Transaction edited successfully!')
+            return HttpResponseRedirect('../../overview_challans/')
+        else:
+            errors.append("Please check values again!")
+            return render(request, '../templates/edit_assignment_form.html', {'form': form, 'errors': errors})
+
+    return render(request, '../templates/edit_assignment_form.html', {'form': form})
+
 def delete_product(request,id_pk):
     product = get_object_or_404(models.Product,pk=id_pk)
     models.Assignment.objects.filter(product=product).delete()
@@ -105,9 +122,12 @@ def assign_product(request,name_pk):
     karigar = get_object_or_404(models.Karigar,pk=name_pk)
     formset = forms.AssignFormSet(queryset=models.Assignment.objects.none())
     errors = []
-
+    challan_id=""
+    date_of_assignment=""
     for form in formset:
         form.fields['product'].queryset = models.Product.objects.all()
+
+
     if request.method == 'POST':
 
         formset = forms.AssignFormSet(request.POST,
@@ -115,37 +135,65 @@ def assign_product(request,name_pk):
         if formset.has_changed(): #atleast one form entry found, validate Challan, Date and Process field
             if not request.POST['challan_id']:
                 errors.append("Challan ID is required!")
+            challan_id = request.POST['challan_id']
             if not request.POST['date_assignment']:
                 errors.append("Assignment date is required!")
+            date_of_assignment = request.POST['date_assignment']
             if request.POST.get('ck',None) == None:
                 errors.append("Process selection [Issue / Receive / Reissue] is required!")
 
         if formset.is_valid() and errors == []: #check validity of product and qty field
-            assignments = formset.save(commit=False)
-            count_form=0
-            for assignment in assignments:
-                count_form = count_form+1
-                assignment.challanid = request.POST['challan_id']
-                assignment.assignmentdate = request.POST['date_assignment']
-                assignment.process = request.POST['ck']
-                assignment.karigar = karigar
-                assignment.save()
-            if count_form == 1:
-                trans = 'transaction'
-            else:
-                trans = 'transactions'
-            messages.success(request, str(count_form)+" "+trans+" added.")
-            if request.POST.get('save'):
-                return HttpResponseRedirect('../../karigars_all/')
-            elif request.POST.get('save_overview'):
-                return HttpResponseRedirect('../../overview_karigars/')
+            try:
+                assignments = formset.save(commit=False)
+                count_form=0
+                product_size_obj=[]
+                product_names=[]
+                for assignment in assignments: #check for duplicate product names in formset
+                    if {assignment.product,assignment.size} in product_size_obj:
+                        errors.append('DUPLICATE ENTRY for '+str(assignment.product)+' '+assignment.size+' not allowed!')
+                        return render(request, '../templates/assignment_form.html', {
+                            'formset': formset,
+                            'karigar': karigar,
+                            'errors': errors,
+                            'challan_id': challan_id,
+                            'date_of_assignment': date_of_assignment,
+
+                        })
+                    product_names.append(assignment.product)
+
+                for assignment in assignments:
+                    count_form = count_form+1
+                    assignment.challanid = request.POST['challan_id']
+                    assignment.assignmentdate = request.POST['date_assignment']
+                    assignment.process = request.POST['ck']
+                    assignment.karigar = karigar
+                    assignment.save()
+                if count_form == 1:
+                    trans = 'transaction'
+                else:
+                    trans = 'transactions'
+                messages.success(request, str(count_form)+" "+trans+" added.")
+                if request.POST.get('save'):
+                    return HttpResponseRedirect('../../karigars_all/')
+                elif request.POST.get('save_overview'):
+                    return HttpResponseRedirect('../../overview_karigars/')
+            except IntegrityError as e:
+                return render(request, '../templates/assignment_form.html', {
+                    'formset': formset,
+                    'karigar': karigar,
+                    'errors': e.__cause__,
+                    'challan_id': challan_id,
+                    'date_of_assignment': date_of_assignment,
+
+                })
 
     return render(request, '../templates/assignment_form.html', {
         'formset': formset,
         'karigar': karigar,
         'errors': errors,
+        'challan_id': challan_id,
+        'date_of_assignment': date_of_assignment,
     })
-
 
 
 def karigars_all(request):
@@ -192,8 +240,6 @@ def getTableKarigar(request):
     )
     #print resultset
     for result in resultset:
-        print 'prduct =  ', result['product']
-        print 'size = ', result['size']
         result['total_received'] = result['sum_received'] - result['sum_reissued']
         result['pending'] = result['total_issued'] - result['total_received']
         q1 = karigar.assignment_set.filter(product=result['product']).filter(process='issue').filter(size=result['size'])
@@ -274,18 +320,21 @@ def overview_challans(request):
     try:
         clist = models.Assignment.objects.all().values('challanid').distinct()
         return render(request, 'overview_challan.html', {'clist': clist})
-    except:
+    except Exception as e:
         return render(request,'test_eror.html')
 
 def getTableChallan(request):
-    challan_id = request.GET['challan_id']
-    if challan_id == 'all':
-        q = models.Assignment.objects.all().order_by('-assignment_id')[:200]
-    else:
-        q = models.Assignment.objects.filter(challanid=challan_id)
-    data = serializers.serialize('json',q)
-    #data = json.dumps(list(q))
-    return HttpResponse(data, content_type='application/json')
+    try:
+        challan_id = request.GET['challan_id']
+        if challan_id == 'all':
+            q = models.Assignment.objects.all().order_by('-assignment_id')[:200]
+        else:
+            q = models.Assignment.objects.filter(challanid=challan_id)
+        data = serializers.serialize('json',q)
+        #data = json.dumps(list(q))
+        return HttpResponse(data, content_type='application/json')
+    except Exception as e:
+        print e
 
 def deleteAssignment(request):
     challan_id = request.GET['challan_id']

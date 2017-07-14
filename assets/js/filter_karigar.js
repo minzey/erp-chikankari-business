@@ -179,7 +179,7 @@ $(document).ready(function() {
                     var chartAreaHeight = rowcount * 150;
                     var chartHeight = chartAreaHeight + 80;
                     var options = {
-                        height: chartAreaHeight, width: 700,
+                        height: chartAreaHeight, width: 1200,
                         chart: {
                             title: 'Performance Report',
                             subtitle: 'Process-wise progress of products'
@@ -511,13 +511,15 @@ $(document).ready(function() {
                         success : function(json) {
                             console.log("length of json received: "+json.length);
                             console.log(json);
+                            ctable.column(7).visible(false);
                             ctable.clear().draw();
 
                             for (var i = 0; i < json.length; i++) {
                                 //console.log("adding "+ json[i]);
 
                                 ctable.row.add([json[i].fields['challanid'], json[i].fields['assignmentdate'], json[i].fields['process'],
-                                    json[i].fields['karigar'], json[i].fields['product'], json[i].fields['size'], json[i].fields['qty']]).draw();
+                                    json[i].fields['karigar'], json[i].fields['product'], json[i].fields['size'], 
+                                    json[i].fields['qty'], json[i].pk]).draw();
                             }
                             $('#transactions').unbind();
                             $('#transactions').on( 'click', 'tr', function (e) {
@@ -525,11 +527,13 @@ $(document).ready(function() {
                                 if ($(this).hasClass('selected')) {
                                     $(this).removeClass('selected');
                                     challan_selected=null;
+                                    document.getElementById("edit_btn").href= "";
                                 }
                                 else {
                                     $('#transactions').find('tr.selected').removeClass('selected');
                                     $(this).addClass('selected');
                                     challan_selected = ctable.row(this).data();
+                                    document.getElementById("edit_btn").href= "edit_assignment/"+challan_selected[7];
                                 }
 
                                 
@@ -556,19 +560,12 @@ $(document).ready(function() {
                                         alert("Deleted successfully:\n"+response[0].fields['challanid']+"\n"+response[0].fields['assignmentdate']+"\n"+
                                         response[0].fields['karigar']+"\n"+response[0].fields['process']+
                                         "\n"+response[0].fields['product']+"\n"+response[0].fields['qty']+"\n"+response[0].fields['size']);
-                                        console.log(response[0].fields['challanid']);
-                                        console.log(response[0].fields['assignmentdate']);
-                                        console.log(response[0].fields['karigar']);
-                                        console.log(response[0].fields['process']);
-                                        console.log(response[0].fields['product']);
-                                        console.log(response[0].fields['qty']);
-                                        //alert("Deleted successfully:\nChallan ID"+response['challanid']);
+
                                         ctable.row('.selected').remove().draw( false );
                                     }
                                 });
                                 return false;
-
-                            });
+                            });                            
                         },
                         error : function(xhr,errmsg,err) {
                             alert(xhr.status + ": " + xhr.responseText);

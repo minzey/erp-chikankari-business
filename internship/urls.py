@@ -50,6 +50,8 @@ urlpatterns = [
     url(r'^overview_dates/get_report/$', login_required(views.getTableDate_ActiveProducts), name='get_report'),
     url(r'^overview_dates/get_report_table/$', login_required(views.getTableData_Process), name='get_report_table'),
     url(r'^overview_challans/delete_assignment/$', login_required(views.deleteAssignment), name='delete_assignment'),
+    url(r'^overview_challans/edit_assignment/(?P<id_pk>[\w\d\ -]+)$', login_required(views.edit_assignment), name='edit_assignment'),
+
 
 
 
