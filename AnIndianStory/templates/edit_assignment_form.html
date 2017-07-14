@@ -1,0 +1,55 @@
+{% extends "form_layout.html" %}
+{% load bootstrap %}
+
+{% block title %}
+<title>Edit Assignment</title>
+{% endblock %}
+
+{% block content %}
+        <div class="container">
+
+                <div class="span12">
+                    <h2>Edit Assignment</h2>
+
+                    <hr>
+                    <form class="form"  role="form" enctype="multipart/form-data" action="" method="POST">
+                        {% if errors %}
+
+
+                                {% for error in errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error }}</strong>
+                                    </div>
+                                {% endfor %}
+
+
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                {{ form.challanid|bootstrap }}
+
+                                {{ form.process|bootstrap }}
+                                {{ form.karigar|bootstrap }}
+                                {{ form.product|bootstrap }}
+                            </div>
+
+                            <div class="col-sm-6">
+                                {{ form.qty|bootstrap }}
+                                {{ form.size|bootstrap }}
+                                {{ form.assignmentdate|bootstrap }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-primary" value="Submit" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
