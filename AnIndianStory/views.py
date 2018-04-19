@@ -327,7 +327,7 @@ def getTableChallan(request):
     try:
         challan_id = request.GET['challan_id']
         if challan_id == 'all':
-            q = models.Assignment.objects.all().order_by('-assignment_id')[:200]
+            q = models.Assignment.objects.all().order_by('-assignment_id')
         else:
             q = models.Assignment.objects.filter(challanid=challan_id)
         data = serializers.serialize('json',q)
