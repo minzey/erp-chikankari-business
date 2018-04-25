@@ -495,17 +495,16 @@ $(document).ready(function() {
 
     });
     
-    $('#id_clist').change(function () {
-        var p = document.getElementById("id_clist");
-        var value = p.options[p.selectedIndex].value;
-        var challan_selected = null;
-        $('#id_clist.chosen-select').trigger('chosen:updated');
+    $('#search_btn').unbind()
+    $('#search_btn').on('click',function(e){
+        var challan_id = document.getElementById("challanID").value
+        console.log(challan_id)
         $.ajax({
                         url : "get_table_challan",
                         type : "get",
                         dataType: 'json',
                         data : {
-                            challan_id : value,
+                            challan_id : challan_id,
                             csrfmiddlewaretoken: '{{ csrf_token }}'
                             },
                         success : function(json) {
@@ -571,10 +570,10 @@ $(document).ready(function() {
                             alert(xhr.status + ": " + xhr.responseText);
                         }
         });
-        return false;
-               
+        
     });
-
+    
+    
 
    
     console.log("my dom is ready");
@@ -587,9 +586,6 @@ $(document).ready(function() {
     no_results_text: "No karigar found!",
     width: "98%"});
     
-    $('#id_clist.chosen-select').chosen({
-    no_results_text: "No challan found!",
-    width: "98%"});
 
     for(var i=0; i<=5; i++) {
         $('#id_form-' + i + '-product.form-control').chosen({
@@ -600,7 +596,6 @@ $(document).ready(function() {
     
     $('#id_klist').change();
     $('#id_plist').change();
-    $('#id_clist').change();
 
 });
 

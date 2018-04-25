@@ -20,12 +20,12 @@
                 <label class="label label-default">CHALLAN</label>
             </h4>
              {% csrf_token %}
-            <select class="chosen-select" id="id_clist" name="id_clist" data-placeholder="Select Challan">
-                        <option>all</option>
-                    {% for assignment in clist %}
-                        <option>{{ assignment.challanid }}</option>
-                    {% endfor %}
-            </select>
+            <div class="input-group" style="width: 98%;">
+                    <input type="text" class="form-control" placeholder="Search Challan" id="challanID" style="color: rgb(192, 192, 192);">
+                    <span class="input-group-addon btn btn-primary" id="search_btn">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </span>                    
+            </div>
         </form>
     </div>
     <div style="max-width: 80%; margin: auto;">

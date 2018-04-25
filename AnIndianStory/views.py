@@ -318,8 +318,7 @@ def getTableProduct(request):
 def overview_challans(request):
     #reset_connection()
     try:
-        clist = models.Assignment.objects.all().values('challanid').distinct()
-        return render(request, 'overview_challan.html', {'clist': clist})
+        return render(request, 'overview_challan.html')
     except Exception as e:
         return render(request,'test_eror.html')
 
@@ -327,9 +326,9 @@ def getTableChallan(request):
     try:
         challan_id = request.GET['challan_id']
         if challan_id == 'all':
-            q = models.Assignment.objects.all().order_by('-assignment_id')[:2000]
+            q = models.Assignment.objects.all().order_by('-assignment_id')[:500]
         else:
-            q = models.Assignment.objects.filter(challanid=challan_id)
+            q = models.Assignment.objects.filter(challanid__icontains=challan_id).order_by('-assignment_id')[:500]
         data = serializers.serialize('json',q)
         #data = json.dumps(list(q))
         return HttpResponse(data, content_type='application/json')
