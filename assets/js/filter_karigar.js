@@ -393,7 +393,7 @@ $(document).ready(function() {
 
                             }
 
-                            var stitchi=0, stitchr=0, blocki=0, blockr=0, embi=0, embr=0, washi=0, washr=0, addoni=0, addonr=0;
+                            var stitchi=0, stitchr=0, blocki=0, blockr=0, embi=0, embr=0, washi=0, washr=0, addoni=0, addonr=0, finishi=0, finishr=0;
                             for(var j=0; j< json.length; j++){
                                 if(json[j].profile == 'stitch') {
                                     stitchi += json[j].total_issued;
@@ -415,6 +415,10 @@ $(document).ready(function() {
                                     addoni += json[j].total_issued;
                                     addonr += json[j].total_received;
                                 }
+                                else if(json[j].profile == 'finish'){
+                                    finishi += json[j].total_issued;
+                                    finishr += json[j].total_received;
+                                }
                             }
 
                             ktablesummary.row.add(['Stitch', stitchi, stitchr, stitchi-stitchr]).draw();
@@ -422,6 +426,7 @@ $(document).ready(function() {
                             ktablesummary.row.add(['Emb', embi, embr, embi-embr]).draw();
                             ktablesummary.row.add(['Wash', washi, washr, washi-washr]).draw();
                             ktablesummary.row.add(['Addon', addoni, addonr, addoni-addonr]).draw();
+                            ktablesummary.row.add(['Finish', finishi, finishr, finishi-finishr]).draw();
 
 
                             ktable.$('tr.selected').removeClass('selected');

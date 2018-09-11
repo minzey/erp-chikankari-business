@@ -66,12 +66,14 @@ class Karigar(models.Model):
     EMBROIDER = "emb"
     WASH = "wash"
     ADDON = "addon"
+    FINISH = "finish"
     PROFILE_CHOICES = (
         (STITCH,'Stitch'),
         (BLOCK,'Block'),
         (EMBROIDER,'Embroider'),
         (WASH,'Wash'),
         (ADDON,'Addon'),
+        (FINISH, 'Finish'),
     )
     name = models.CharField(primary_key=True, max_length=40)
     profile = models.CharField(max_length=20, choices=PROFILE_CHOICES, null=False, blank=False)
