@@ -1,5 +1,8 @@
+import traceback
+from datetime import datetime
+
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -14,6 +17,19 @@ from django.core import serializers
 
 from django.http import HttpResponse
 from django.db import IntegrityError
+
+def get_active_company(request):
+    return request.session.get('active_company_id', 1)
+
+def get_active_company_name(request):
+    return request.session.get('active_company_name', "")
+
+def set_active_company(request, company_id=1):
+    request.session['active_company_id'] = company_id
+    try:
+        request.session['active_company_name'] = models.Company.objects.get(id=company_id).name
+    except models.Company.DoesNotExist:
+        pass
 
 def reset_connection():
     from django.db import connection
@@ -30,28 +46,28 @@ def login_user(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                set_active_company(request)
                 return HttpResponseRedirect('/karigars_all/')
     return render(request,'loginapp.html')
 
-@login_required(login_url='/login/')
+def redirect_root(request):
+    return HttpResponseRedirect('/homepage/')
 
 def homepage(request):
     return render(request, '../templates/homepage.html')
 
-
-
 def new_karigar(request):
     form = forms.KarigarForm()
     if request.method == 'POST':
-        form = forms.KarigarForm(request.POST,request.FILES)
+        form = forms.KarigarForm(request.POST, request.FILES)
         if form.is_valid():
             karigar = form.save()
             messages.success(request, "New Karigar added.")
             return HttpResponseRedirect('../../karigars_all/')
     return render(request, '../templates/newkarigar_form.html', {'form':form})
 
-def edit_karigar(request,name_pk):
-    karigar = get_object_or_404(models.Karigar,pk=name_pk)
+def edit_karigar(request, pk):
+    karigar = get_object_or_404(models.Karigar,pk=pk)
     form = forms.KarigarForm(instance=karigar)
     if request.method == 'POST':
         form = forms.KarigarForm(request.POST, request.FILES, instance=karigar)
@@ -61,41 +77,44 @@ def edit_karigar(request,name_pk):
             return HttpResponseRedirect('../../karigars_all/')
     return render(request, '../templates/newkarigar_form.html', {'form': form})
 
-def delete_karigar(request,name_pk):
-    models.Assignment.objects.filter(karigar=name_pk).delete()
-    models.Karigar.objects.filter(pk=name_pk).delete()
+def delete_karigar(request, pk):
+    karigar_name = models.Karigar.objects.get(pk=pk).name
+    models.Assignment.objects.filter(karigar=pk).delete()
+    models.Karigar.objects.filter(pk=pk).delete()
 
-    messages.success(request,"All records of "+name_pk+" deleted!")
+    messages.success(request,"All records of "+karigar_name+" deleted!")
     return HttpResponseRedirect('../../karigars_all/')
 
 
 def new_product(request):
-    form = forms.ProductForm()
+    product_form = forms.ProductForm(initial = {'company': get_active_company(request)})
     if request.method == 'POST':
-        form = forms.ProductForm(request.POST,request.FILES)
+        form = forms.ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.fabric = product.fabric.lower()
             product.colour = product.colour.lower()
             product.save()
-            messages.success(request,"New product added.")
+            messages.success(request, "New product added.")
             return HttpResponseRedirect('../../products_all/')
-    return render(request, '../templates/newproduct_form.html', {'form':form})
+    return render(request, '../templates/newproduct_form.html', {'form':product_form})
 
 def edit_product(request, id_pk):
     product = get_object_or_404(models.Product,pk=id_pk)
     form = forms.ProductForm(instance=product)
     if request.method == 'POST':
-        form = forms.ProductForm(request.POST,request.FILES,instance=product)
+        form = forms.ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             product = form.save()
             messages.success(request,"Product information updated.")
             return HttpResponseRedirect('../../products_all/')
     return render(request, '../templates/newproduct_form.html', {'form':form})
 
+
 def edit_assignment(request, id_pk):
     assignment = get_object_or_404(models.Assignment, pk=id_pk)
     form = forms.EditAssignmentForm(instance=assignment)
+    form.fields['product'].queryset = models.Product.objects.filter(company=get_active_company(request))
     errors=[]
     if request.method == 'POST':
         form = forms.EditAssignmentForm(request.POST, instance=assignment)
@@ -109,12 +128,13 @@ def edit_assignment(request, id_pk):
 
     return render(request, '../templates/edit_assignment_form.html', {'form': form})
 
-def delete_product(request,id_pk):
-    product = get_object_or_404(models.Product,pk=id_pk)
+
+def delete_product(request, id_pk):
+    product = get_object_or_404(models.Product, pk=id_pk)
+    product_name = product.prodid
     models.Assignment.objects.filter(product=product).delete()
     models.Product.objects.filter(pk=id_pk).delete()
-
-    messages.success(request,"All records of "+id_pk+" deleted!")
+    messages.success(request,"All records of "+product_name+" deleted!")
     return HttpResponseRedirect('../../products_all/')
 
 
@@ -122,10 +142,10 @@ def assign_product(request,name_pk):
     karigar = get_object_or_404(models.Karigar,pk=name_pk)
     formset = forms.AssignFormSet(queryset=models.Assignment.objects.none())
     errors = []
-    challan_id=""
-    date_of_assignment=""
+    challan_id = ""
+    date_of_assignment = datetime.now().strftime("%Y-%m-%d")
     for form in formset:
-        form.fields['product'].queryset = models.Product.objects.all()
+        form.fields['product'].queryset = models.Product.objects.filter(company=get_active_company(request))
 
 
     if request.method == 'POST':
@@ -197,39 +217,39 @@ def assign_product(request,name_pk):
 
 
 def karigars_all(request):
-    #reset_connection()
+
     try:
         karigars = models.Karigar.objects.all().order_by('name')
         return render(request, '../templates/karigar_list.html', {'karigars': karigars})
-    except:
-        return render(request, '../templates/test_eror.html')
+    except Exception as e:
+        print(f"Error in listing karigars: {e} \nTraceback: {traceback.format_exc()}")
+        return render(request, '../templates/server_error.html')
 
 def products_all(request):
-    #reset_connection()
     try:
-        products = models.Product.objects.all()
+        products = models.Product.objects.filter(company=get_active_company(request))
         return render(request, '../templates/product_list_new.html', {'products': products})
-    except:
-        return render(request, '../templates/test_eror.html')
+    except Exception as e:
+        print(f"Error in listing all products: {e} \nTraceback: {traceback.format_exc()}")
+        return render(request, '../templates/server_error.html')
 
 
 
 def overview_karigars(request):
-    #reset_connection()
+
     try:
         klist = models.Karigar.objects.all()
         return render(request, 'overview_karigar.html',{'klist': klist})
     except:
-        return render(request, 'test_eror.html')
+        return render(request, 'server_error.html')
 
 
 
 
 def getTableKarigar(request):
-
-    name_pk = request.GET['karigar_name']
-    karigar = get_object_or_404(models.Karigar, pk=name_pk)
-    resultset = models.Assignment.objects.filter(karigar=karigar).values('product','size').annotate(
+    pk = request.GET['karigar_id']
+    karigar = get_object_or_404(models.Karigar, pk=pk)
+    resultset = models.Assignment.objects.filter(karigar=karigar).values('product', 'product__prodid', 'size').annotate(
         total_issued=Sum(
             Case(When(process='issue', then='qty'), default=Value(0), output_field=IntegerField())),
         sum_received=Sum(
@@ -238,7 +258,7 @@ def getTableKarigar(request):
             Case(When(process='reissue', then='qty'), default=Value(0), output_field=IntegerField())),
 
     )
-    #print resultset
+
     for result in resultset:
         result['total_received'] = result['sum_received'] - result['sum_reissued']
         result['pending'] = result['total_issued'] - result['total_received']
@@ -266,19 +286,19 @@ def getTableKarigar(request):
 
 
 def overview_products(request):
-    #reset_connection()
+
     try:
-        plist = models.Product.objects.all()
+        plist = models.Product.objects.filter(company=get_active_company(request))
         return render(request, 'overview_product.html', {'plist': plist})
     except:
-        return render(request, 'test_eror.html')
+        return render(request, 'server_error.html')
 
 
 def getTableProduct(request):
 
-    product_pk = request.GET['product_id']
-    product = get_object_or_404(models.Product, pk=product_pk)
-    resultset = models.Assignment.objects.filter(product=product).values('karigar').annotate(
+    pk = request.GET['product_id']
+    product = get_object_or_404(models.Product, pk=pk)
+    resultset = models.Assignment.objects.filter(product=product).values('karigar', 'karigar__name').annotate(
         total_issued=Sum(
             Case(When(process='issue', then='qty'), default=Value(0), output_field=IntegerField())),
         sum_received=Sum(
@@ -311,6 +331,7 @@ def getTableProduct(request):
             result['reissue_transactions'] =serializers.serialize('json',q3, fields=('challanid','assignmentdate','qty'))
             #result['reissue_transactions'] =q3
     data = json.dumps(list(resultset))
+    print(f"returning data : {data}")
     #data = serializers.serialize("json", list(resultset), fields=('product','total_issued','sum_received','sum_reissued'))
     return HttpResponse(data, content_type='application/json')
 
@@ -320,31 +341,28 @@ def overview_challans(request):
     try:
         return render(request, 'overview_challan.html')
     except Exception as e:
-        return render(request,'test_eror.html')
+        return render(request,'server_error.html')
 
 def getTableChallan(request):
     try:
         challan_id = request.GET['challan_id']
+        challans_active_company = models.Assignment.objects.filter(product__company=get_active_company(request))
         if challan_id == 'all':
-            q = models.Assignment.objects.all().order_by('-assignment_id')[:500]
+            q = challans_active_company.order_by('-assignment_id')[:500]
         else:
-            q = models.Assignment.objects.filter(challanid__icontains=challan_id).order_by('-assignment_id')[:500]
-        data = serializers.serialize('json',q)
-        #data = json.dumps(list(q))
+            q = challans_active_company.filter(challanid__icontains=challan_id).order_by('-assignment_id')[:500]
+        data = serializers.serialize('json', q, use_natural_foreign_keys=True)
+
         return HttpResponse(data, content_type='application/json')
     except Exception as e:
-        print e
+        print(e)
 
 def deleteAssignment(request):
-    challan_id = request.GET['challan_id']
-    product = request.GET['product']
-    qty = request.GET['qty']
-    karigar = request.GET['karigar']
-    size = request.GET['size']
-    q = models.Assignment.objects.filter(challanid=challan_id).filter(product=product).filter(karigar=karigar).filter(size=size).filter(qty=qty)
-    data = serializers.serialize('json',q)
-    models.Assignment.objects.filter(challanid=challan_id).filter(product=product).filter(karigar=karigar).filter(size=size).filter(qty=qty).delete()
-
+    assignment_id = request.GET['assignment_id']
+    q = models.Assignment.objects.filter(assignment_id=assignment_id)
+    data = serializers.serialize('json', q, use_natural_foreign_keys=True)
+    print(f"Deleting Assignemnt {data}")
+    q.delete()
     return HttpResponse(data, content_type='application/json')
 
 
@@ -352,12 +370,12 @@ def overview_dates(request):
     try:
         return render(request, 'overview_date.html')
     except:
-        return render(request, 'test_eror.html')
+        return render(request, 'server_error.html')
 
 def getTableDate_ActiveProducts(request):
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
-    active_products = models.Assignment.objects.exclude(process='issue').filter(assignmentdate__range=[start_date,end_date]).values('karigar__profile','product').annotate(
+    active_products = models.Assignment.objects.exclude(process='issue').filter(assignmentdate__range=[start_date,end_date], product__company=get_active_company(request)).values('karigar__profile','product', 'product__prodid').annotate(
         sum_received=Sum(
             Case(When(process='receive', then='qty'), default=Value(0), output_field=IntegerField())),
         sum_reissued=Sum(
@@ -365,6 +383,7 @@ def getTableDate_ActiveProducts(request):
     ).order_by('product')
 
     data = json.dumps(list(active_products))
+    print(data)
     return HttpResponse(data, content_type='application/json')
 
 def getTableData_Process(request):
@@ -373,9 +392,26 @@ def getTableData_Process(request):
     product = request.GET['product']
     process = request.GET['process']
     resultset = models.Assignment.objects.exclude(process='issue').filter(assignmentdate__range=[start_date,end_date]).\
-        filter(karigar__profile=process).filter(product=product).order_by('karigar')
+        filter(karigar__profile=process).filter(product__prodid=product).order_by('karigar')
     data = serializers.serialize('json',resultset)
     return HttpResponse(data, content_type='application/json')
+
+
+def switch_company(request):
+    if request.method == "GET":
+        companies = models.Company.objects.all()
+        active_company = get_active_company(request)
+        print(active_company)
+        return render(request, 'company_context.html', {'companies': companies, 'active_company_id': active_company})
+
+    elif request.method == "POST":
+        selected_company_id = request.POST.get('company-dropdown', 1)
+        set_active_company(request, selected_company_id)
+        response = HttpResponseRedirect('../../products_all/')
+        messages.success(request, f"Switched to {get_active_company_name(request)}")
+        return response
+
+
 
 
 

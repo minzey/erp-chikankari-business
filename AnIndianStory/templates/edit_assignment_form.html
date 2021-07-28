@@ -25,20 +25,7 @@
 
                         {% endif %}
                         <div class="row">
-                            <div class="col-sm-6">
-                                {{ form.challanid|bootstrap }}
-
-                                {{ form.process|bootstrap }}
-                                {{ form.karigar|bootstrap }}
-                                {{ form.product|bootstrap }}
-                            </div>
-
-                            <div class="col-sm-6">
-                                {{ form.qty|bootstrap }}
-                                {{ form.size|bootstrap }}
-                                {{ form.assignmentdate|bootstrap }}
-                            </div>
-
+                            {{ form | bootstrap }}
                         </div>
 
 

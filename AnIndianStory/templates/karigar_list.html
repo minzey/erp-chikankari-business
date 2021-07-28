@@ -1,5 +1,5 @@
 {% extends "form_layout.html" %}
-{% load static from staticfiles %}
+{% load static %}
 
 {% block title %}
 <title>All Karigars</title>
@@ -65,11 +65,11 @@
                         <a href="{% url 'new_product_assign' name_pk=karigar.pk %}">{{ karigar.name }}</a>
                     </td>
                     <td>{{ karigar.profile }}</td>
-                    <td>{{ karigar.address }}</td>
-                    <td>{{ karigar.phone }}</td>
-                    <td>{{ karigar.pan }}</td>
-                    <td><a href="{% url 'edit_karigar' name_pk=karigar.pk %}"><span class="glyphicon glyphicon-edit"></span></a></td>
-                    <td><a href="{% url 'delete_karigar' name_pk=karigar.pk %}" onclick="return confirm('Are you sure you want to delete all records of {{ karigar.name }}?')"><span class="glyphicon glyphicon-trash"></span></td>
+                    <td>{{ karigar.address | default_if_none:"" }}</td>
+                    <td>{{ karigar.phone | default_if_none:"" }}</td>
+                    <td>{{ karigar.pan | default_if_none:"" }}</td>
+                    <td><a href="{% url 'edit_karigar' pk=karigar.pk %}"><span class="glyphicon glyphicon-edit"></span></a></td>
+                    <td><a href="{% url 'delete_karigar' pk=karigar.pk %}" onclick="return confirm('Are you sure you want to delete all records of {{ karigar.name }}?')"><span class="glyphicon glyphicon-trash"></span></td>
                 </tr>
                 {% endfor %}
 

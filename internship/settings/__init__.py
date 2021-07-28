@@ -1,13 +1,6 @@
 from .base import *
 
+environment = os.environ.get("taanabaana_environment", "dev")
 
-try:
-    from .local import *
-    live = False
-    print 'testing locally'
-except:
-    live = True
-
-if live == True:
+if environment == "prod":
     from .production import *
-    print 'testing in production'

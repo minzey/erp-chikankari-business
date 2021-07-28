@@ -11,7 +11,7 @@
             <select class="chosen-select" id="id_plist" name="id_plist" data-placeholder="Select Your Options">
 
                     {% for product in plist %}
-                        <option>{{ product.prodid }}</option>
+                        <option value="{{ product.pk }}">{{ product.prodid }}</option>
                     {% endfor %}
             </select>
 

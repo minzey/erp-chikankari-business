@@ -1,0 +1,36 @@
+{% extends "form_layout.html" %}
+{% load static %}
+
+{% block title %}
+<title>Switch Company</title>
+{% endblock %}
+
+{% block content %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" style="width: 70%; margin: auto; margin-bottom: 10px;">
+                <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Success! </strong>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="container">
+        <form method="post">
+            <div class="form-group">
+                <label for="company-dropdown">Select Company / Collection</label>
+                <select class="form-control" name="company-dropdown" id="company-dropdown">
+                    {% for company in companies %}
+                        {% if active_company_id == company.id|stringformat:"s"  %}
+                            <option value="{{ company.id }}" selected>{{ company.name }}</option>
+                        {% else %}
+                            <option value="{{ company.id }}" data-sample="{{ active_company_id }}">{{ company.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}

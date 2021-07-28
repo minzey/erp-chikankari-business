@@ -7,31 +7,13 @@
 
 {% block content %}
         <div class="container">
-
+            <div class="row">
                 <div class="span12">
                     <h2>New Product Details</h2>
-
                     <hr>
-                    <form class="form"  role="form" enctype="multipart/form-data" action="" method="POST">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                {{ form.prodid|bootstrap }}
 
-                                {{ form.colour|bootstrap }}
-                                {{ form.fabric|bootstrap }}
-                                {{ form.photo|bootstrap }}
-                            </div>
-                            {% if request.user.is_superuser %}
-                            <div class="col-sm-6">
-                                {{ form.cost_stitch|bootstrap }}
-                                {{ form.cost_block|bootstrap }}
-                                {{ form.cost_emb|bootstrap }}
-                                {{ form.cost_wash|bootstrap }}
-                                {{ form.cost_addon|bootstrap }}
-                            </div>
-                            {% endif %}
-                        </div>
-
+                    <form class="form" role="form" enctype="multipart/form-data" action="" method="POST">
+                        {{ form|bootstrap }}
 
                         <div class="form-group">
                             <div class="col-sm-12">

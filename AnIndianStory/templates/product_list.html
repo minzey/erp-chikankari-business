@@ -55,11 +55,11 @@
                             </thead>
                             <tbody style="text-align: center;">
                                 <tr>
-                                    <td>{{ product.cost_stitch }}</td>
-                                    <td>{{ product.cost_block }}</td>
-                                    <td>{{ product.cost_emb }}</td>
-                                    <td>{{ product.cost_wash }}</td>
-                                    <td>{{ product.cost_addon }}</td>
+                                    <td>{{ product.cost_stitch | default_if_none:"" }}</td>
+                                    <td>{{ product.cost_block | default_if_none:"" }}</td>
+                                    <td>{{ product.cost_emb | default_if_none:"" }}</td>
+                                    <td>{{ product.cost_wash | default_if_none:"" }}</td>
+                                    <td>{{ product.cost_addon | default_if_none:"" }}</td>
                                 </tr>
                             </tbody>
                         </table>

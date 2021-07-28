@@ -92,3 +92,9 @@ ENV/
 
 # Bakcup files
 .sql
+
+# idea intellij related
+.idea
+
+# python compiled files
+.pyc

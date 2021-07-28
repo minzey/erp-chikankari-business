@@ -114,11 +114,11 @@ $(document).ready(function() {
 
 
     $('#generate_report_btn').click(function () {
-        console.log("button pressed");
+
         var start = document.getElementById('start_date').value;
         var end = document.getElementById('end_date').value;
-        console.log("from = "+start+ typeof start);
-        console.log("to = "+end+ typeof end);
+        //console.log("from = "+start+ typeof start);
+        //console.log("to = "+end+ typeof end);
        $.ajax({
            url : "get_report",
            type: 'get',
@@ -128,9 +128,6 @@ $(document).ready(function() {
                end_date : end
            },
            success: function(json){
-               console.log(json);
-
-
                google.charts.setOnLoadCallback(drawChart);
                 function drawChart() {
                     var rowcount=0;
@@ -141,13 +138,13 @@ $(document).ready(function() {
                     data.addColumn('number', 'emb');
                     data.addColumn('number', 'wash');
                     data.addColumn('number', 'addon');
-                    console.log(json.length);
+
                     for(var i=0; i<json.length; ){
                         obj = json[i];
                         var nstitch=0, nblock=0, nemb=0, nwash=0, naddon=0;
-                        var current_product = obj['product'];
+                        var current_product = obj['product__prodid'];
 
-                        var subproduct = obj['product'];
+                        var subproduct = obj['product__prodid'];
 
                         while(subproduct == current_product){
                             var received = json[i]['sum_received'] - json[i]['sum_reissued'];
@@ -163,14 +160,13 @@ $(document).ready(function() {
                             if(i<json.length) {
                                 obj = json[i];
 
-                                subproduct = obj['product'];
+                                subproduct = obj['product__prodid'];
 
                             }
                             else{
                                 break;
                             }
                         }
-
                         data.addRow([current_product, nstitch, nblock, nemb, nwash, naddon]);
                         rowcount+=1;
                     }
@@ -218,7 +214,6 @@ $(document).ready(function() {
                                     end_date: end
                                 },
                                 success: function(json){
-                                    console.log(json);
                                     dtable.clear().draw();
 
                                     for (var i = 0; i < json.length; i++) {
@@ -246,14 +241,11 @@ $(document).ready(function() {
         if(localStorage.getItem("karigar_select_index") != null){
             value = localStorage.getItem("karigar_select_index");
             $('#id_klist').val(value);
-
             localStorage.removeItem("karigar_select_index");
         }
         else {
             //console.log(event.data.select_bydefault);
             var e = document.getElementById("id_klist");
-            //console.log(e);
-            //console.log(e.selectedIndex);
             value = e.options[e.selectedIndex].value;
         }
         $('#id_klist.chosen-select').trigger('chosen:updated');
@@ -265,11 +257,11 @@ $(document).ready(function() {
                         type : "get",
                         dataType: 'json',
                         data : {
-                            karigar_name : value,
+                            karigar_id : value,
                             csrfmiddlewaretoken: '{{ csrf_token }}'
                             },
                         success : function(json) {
-                            console.log("length of json received: "+json.length);
+                            //console.log("length of json received: "+json.length);
 
                             var tr;
                             table.clear().draw();
@@ -282,10 +274,8 @@ $(document).ready(function() {
 
                                 // console.log("adding row to main table"+json[i].product+' '+json[i]['size']);
                                 // console.log(json[i]['size']);
-                                table.row.add([json[i].product,json[i]['size'], json[i].total_issued,
+                                table.row.add([json[i]['product__prodid'],json[i]['size'], json[i].total_issued,
                                     json[i].total_received, json[i].pending]).draw();
-
-
                             }
 
                             table.$('tr.selected').removeClass('selected');
@@ -302,15 +292,15 @@ $(document).ready(function() {
                                 }
                                 product_selected = table.row( this ).data()[0];
                                 size_selected = table.row(this).data()[1];
-                                console.log( "selected product: "+ table.row( this ).data()[0] );
-                                console.log("selected size: "+size_selected);
+                                //console.log( "selected product: "+ table.row( this ).data()[0] );
+                                //console.log("selected size: "+size_selected);
                                 issuetable.clear().draw();
                                 receivetable.clear().draw();
                                 reissuetable.clear().draw();
-                                console.log("length json inside click: "+json.length);
+                                //console.log("length json inside click: "+json.length);
                                 for(var i = 0; i<json.length; i++){
                                     //console.log(i+" "+ json[i]);
-                                    if (json[i].product == product_selected && json[i].size == size_selected){
+                                    if (json[i]['product__prodid'] == product_selected && json[i].size == size_selected){
                                         console.log("object found in ");
                                         console.log(json[i]);
                                         if(json[i].issue_transactions != 'No transactions') {
@@ -354,7 +344,8 @@ $(document).ready(function() {
                             } );
                         },
                         error : function(xhr,errmsg,err) {
-                            alert(xhr.status + ": " + xhr.responseText);
+                            console.log(xhr.status + ": " + xhr.responseText);
+                            console.log(errmsg, err)
                         }
                     });
                     return false;
@@ -366,7 +357,7 @@ $(document).ready(function() {
         var value = p.options[p.selectedIndex].value;
         
         $('#id_plist.chosen-select').trigger('chosen:updated');
-        console.log(value);
+        //console.log(value);
         $.ajax({
                         url : "get_table_product",
                         type : "get",
@@ -376,7 +367,7 @@ $(document).ready(function() {
                             csrfmiddlewaretoken: '{{ csrf_token }}'
                             },
                         success : function(json) {
-                            console.log("length of json received: "+json.length);
+                            //console.log("length of json received: "+json.length);
 
                             var tr;
                             ktable.clear().draw();
@@ -387,7 +378,7 @@ $(document).ready(function() {
 
                             for (var i = 0; i < json.length; i++) {
                                 console.log("adding row to main table");
-                                ktable.row.add([json[i].karigar, json[i].profile, json[i].total_issued,
+                                ktable.row.add([json[i]['karigar__name'], json[i].profile, json[i].total_issued,
                                     json[i].total_received, json[i].pending]).draw();
 
 
@@ -442,20 +433,17 @@ $(document).ready(function() {
                                     $(this).addClass('selected');
                                 }
                                 karigar_selected = ktable.row( this ).data()[0];
-                                console.log( "selected karigar: "+ ktable.row( this ).data()[0] );
+                                //console.log( "selected karigar: "+ ktable.row( this ).data()[0] );
                                 kissuetable.clear().draw();
                                 kreceivetable.clear().draw();
                                 kreissuetable.clear().draw();
                                 console.log("length json inside click: "+json.length);
                                 for(var i = 0; i<json.length; i++){
                                     console.log(i+" "+ json[i]);
-                                    if (json[i].karigar == karigar_selected){
-                                        console.log("object found in ");
-                                        console.log(json[i]);
+                                    if (json[i]['karigar__name'] == karigar_selected){
+
                                         if(json[i].issue_transactions != 'No transactions') {
                                             obj = $.parseJSON(json[i].issue_transactions);
-                                            console.log("parsed json issue transs");
-                                            console.log(obj);
 
                                             for (var j = 0; j < obj.length; j++) {
                                                 kissuetable.row.add([obj[j].fields.challanid,
@@ -466,8 +454,6 @@ $(document).ready(function() {
 
                                         if(json[i].receive_transactions != 'No transactions') {
                                             obj = $.parseJSON(json[i].receive_transactions);
-                                            console.log("parsed json receive transs");
-                                            console.log(obj);
 
                                             for (var j = 0; j < obj.length; j++) {
                                                 kreceivetable.row.add([obj[j].fields.challanid,
@@ -513,8 +499,6 @@ $(document).ready(function() {
                             csrfmiddlewaretoken: '{{ csrf_token }}'
                             },
                         success : function(json) {
-                            console.log("length of json received: "+json.length);
-                            console.log(json);
                             ctable.column(7).visible(false);
                             ctable.clear().draw();
 
@@ -522,7 +506,7 @@ $(document).ready(function() {
                                 //console.log("adding "+ json[i]);
 
                                 ctable.row.add([json[i].fields['challanid'], json[i].fields['assignmentdate'], json[i].fields['process'],
-                                    json[i].fields['karigar'], json[i].fields['product'], json[i].fields['size'], 
+                                    json[i].fields['karigar'][1], json[i].fields['product'][1], json[i].fields['size'],
                                     json[i].fields['qty'], json[i].pk]).draw();
                             }
                             $('#transactions').unbind();
@@ -545,25 +529,19 @@ $(document).ready(function() {
                             
                             $('#delete_btn').unbind();
                             $('#delete_btn').on('click', function(e){
-
                                 if (challan_selected !=null)
                                 $.ajax({
                                     url: "delete_assignment",
                                     dataType : 'json',
                                     type: "get",
                                     data:{
-                                        challan_id : challan_selected[0],
-                                        karigar : challan_selected[3],
-                                        product : challan_selected[4],
-                                        size: challan_selected[5],
-                                        qty : challan_selected[6],
+                                        assignment_id : challan_selected[7],
                                         csrfmiddlewaretoken: '{{ csrf_token }}'
                                     },
                                     success: function(response){
-                                        console.log(response);
                                         alert("Deleted successfully:\n"+response[0].fields['challanid']+"\n"+response[0].fields['assignmentdate']+"\n"+
-                                        response[0].fields['karigar']+"\n"+response[0].fields['process']+
-                                        "\n"+response[0].fields['product']+"\n"+response[0].fields['qty']+"\n"+response[0].fields['size']);
+                                        response[0].fields['karigar'][1]+"\n"+response[0].fields['process']+
+                                        "\n"+response[0].fields['product'][1]+"\n"+response[0].fields['qty']+"\n"+response[0].fields['size']);
 
                                         ctable.row('.selected').remove().draw( false );
                                     }
@@ -578,10 +556,7 @@ $(document).ready(function() {
         
     });
     
-    
 
-   
-    console.log("my dom is ready");
     //console.log(document.getElementById('id_plist'));
     $('#id_plist.chosen-select').chosen({
     no_results_text: "No product found!",

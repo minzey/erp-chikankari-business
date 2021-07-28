@@ -1,8 +1,17 @@
 from django import forms
+from django.core.exceptions import ValidationError
+
 from . import models
 from django.forms.widgets import Select
 
 class KarigarForm(forms.ModelForm):
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if not name.isalpha():
+            raise ValidationError("Special characters not allowed in Karigar name. Please use A-Z only.")
+        return str.capitalize(name)
+
     class Meta:
         model = models.Karigar
         fields = [
@@ -15,21 +24,13 @@ class KarigarForm(forms.ModelForm):
         ]
 
 
+
 class ProductForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ProductForm, self).__init__(*args, **kwargs)
-        self.fields['prodid'].label='Product ID'
-        self.fields['cost_stitch'].label = 'Cost of Stitching'
-        self.fields['cost_block'].label = 'Cost of Blocking'
-        self.fields['cost_emb'].label = 'Cost of Embroidering'
-        self.fields['cost_wash'].label = 'Cost of Washing'
-        self.fields['cost_addon'].label = 'Cost of Addon'
-
-
     class Meta:
         model = models.Product
         fields = [
             'prodid',
+            'company',
             'fabric',
             'colour',
             'photo',
@@ -39,21 +40,25 @@ class ProductForm(forms.ModelForm):
             'cost_wash',
             'cost_addon'
         ]
+        labels = {
+            'prodid': 'Product Name',
+            'cost_stitch': 'Cost of Stitching per pc',
+            'cost_block': 'Cost of Blocking per pc',
+            'cost_emb': 'Cost of Embroidery per pc',
+            'cost_wash': 'Cost of Washing per pc',
+            'cost_addon': 'Cost of Addon per pc'
+        }
 
 
 class AssignForm(forms.ModelForm):
     class Meta:
         model = models.Assignment
-        #CHOICES = models.Product.objects.all()
         fields = [
 
             'product',
             'size',
             'qty'
         ]
-        widgets = {
-            #'product' : Select(choices=((x.prodid) for x in CHOICES )),
-        }
 
 
 AssignFormSet = forms.modelformset_factory(
@@ -75,3 +80,7 @@ class EditAssignmentForm(forms.ModelForm):
             'qty',
             'assignmentdate'
         ]
+        widgets = {
+            'assignmentdate': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type':'date'}),
+            'process': forms.Select(choices=(('issue','issue'), ('reissue','reissue'), ('receive','receive')))
+        }

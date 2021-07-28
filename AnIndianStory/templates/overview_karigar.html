@@ -10,7 +10,7 @@
              {% csrf_token %}
             <select class="chosen-select" id="id_klist" name="select_karigar">
                     {% for karigar in klist %}
-                        <option>{{ karigar.name }}</option>
+                        <option value="{{ karigar.pk }}">{{ karigar.name }}</option>
                     {% endfor %}
             </select>
         </form>
