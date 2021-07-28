@@ -1,2 +1,2 @@
-web: gunicorn internship.wsgi
 release: python manage.py migrate
+web: gunicorn internship.wsgi

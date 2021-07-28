@@ -1,5 +1,6 @@
 from .base import *
 
 environment = os.environ.get("taanabaana_environment", "dev")
-print(environment)
-from .production import *
+print(f"CURRENT ENVIRONMENT: {environment}")
+if environment == "prod":
+    from .production import *
