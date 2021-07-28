@@ -1,5 +1,6 @@
 from django.conf import settings
 import dj_database_url
+import django_heroku
 
 DEBUG = False
 TEMPLATE_DEBUG = False
@@ -12,3 +13,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+django_heroku.settings(locals())
+

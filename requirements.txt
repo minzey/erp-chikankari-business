@@ -36,3 +36,4 @@ urllib3==1.26.6
 virtualenv==15.0.2
 whitenoise==2.0.6
 mysqlclient
+django_heroku
