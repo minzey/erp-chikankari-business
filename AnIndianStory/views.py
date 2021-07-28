@@ -51,7 +51,7 @@ def login_user(request):
     return render(request,'loginapp.html')
 
 def redirect_root(request):
-    return HttpResponseRedirect('/homepage/')
+    return HttpResponseRedirect('/karigars_all/')
 
 def homepage(request):
     return render(request, '../templates/homepage.html')
